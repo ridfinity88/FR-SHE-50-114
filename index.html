@@ -486,6 +486,107 @@
 
       .upload-box { min-height: 180px; }
     }
+
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.38);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 9999;
+      backdrop-filter: blur(4px);
+    }
+
+    .popup-overlay.show {
+      display: flex;
+    }
+
+    .popup-card {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 28px;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.20);
+      animation: cutePop 0.22s ease-out;
+      border: 1px solid rgba(255,255,255,0.75);
+    }
+
+    @keyframes cutePop {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .popup-icon {
+      width: 74px;
+      height: 74px;
+      margin: 0 auto 12px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      background: #fff4f7;
+    }
+
+    .popup-title {
+      font-size: clamp(22px, 5vw, 30px);
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: #111;
+    }
+
+    .popup-message {
+      font-size: clamp(15px, 3.5vw, 18px);
+      color: #555;
+      line-height: 1.55;
+      margin-bottom: 18px;
+      white-space: pre-line;
+    }
+
+    .popup-close-btn {
+      width: 100%;
+      min-height: 54px;
+      border: none;
+      border-radius: 16px;
+      background: #ff7aa2;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(255, 122, 162, 0.28);
+    }
+
+    .popup-close-btn:active {
+      transform: scale(0.98);
+    }
+
+    .popup-card.success .popup-icon { background: #e9fbf0; }
+    .popup-card.error .popup-icon { background: #fff0f0; }
+    .popup-card.loading .popup-icon { background: #eef6ff; }
+
+    .popup-spinner {
+      width: 42px;
+      height: 42px;
+      border: 5px solid #dbeafe;
+      border-top-color: #1f6feb;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
   </style>
 </head>
 
@@ -525,10 +626,22 @@
       <div id="navBar" class="nav-bar"></div>
     </section>
 
+
+    <div id="cutePopup" class="popup-overlay" aria-hidden="true">
+      <div id="popupCard" class="popup-card">
+        <div id="popupIcon" class="popup-icon">🌸</div>
+        <div id="popupTitle" class="popup-title">แจ้งเตือน</div>
+        <div id="popupMessage" class="popup-message">ข้อความ</div>
+        <button id="popupCloseBtn" class="popup-close-btn" type="button" onclick="hidePopup()">
+          ตกลงค่ะ
+        </button>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    const WEB_APP_URL = "ใส่_WEB_APP_URL_จาก_Google_Apps_Script_ตรงนี้";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxDM5vwSYm91WKg_zXpdIZzxMPPHI8iS_dcJHH4CLiHN2v5n-HTm_FcLRsnd0FHonOG/exec";
 
     let currentPage = "basic";
     let activeCategoryIndex = null;
@@ -1093,68 +1206,148 @@
       renderBasicPage();
     }
 
-function submitData() {
-  if (isSubmitting) return;
+    async function submitData() {
+      if (isSubmitting) return;
 
-  if (!WEB_APP_URL || WEB_APP_URL.includes("https://script.google.com/macros/s/AKfycbxDM5vwSYm91WKg_zXpdIZzxMPPHI8iS_dcJHH4CLiHN2v5n-HTm_FcLRsnd0FHonOG/exec")) {
-    const payloadForTest = buildPayload();
-    console.log("ยังไม่ได้ใส่ WEB_APP_URL ข้อมูลทดสอบ:", payloadForTest);
-    alert("ยังไม่ได้ใส่ WEB_APP_URL จาก Google Apps Script กรุณาใส่ URL ก่อนใช้งานจริง");
-    return;
-  }
+      if (!WEB_APP_URL || WEB_APP_URL.includes("https://script.google.com/macros/s/AKfycbz-v3aFRzkXpM4yULMo9dVD80jr-ejP-oL1FTsN4KhIDqX7jpYFkez0XcYzn1pIfzly/exec")) {
+        const payloadForTest = buildPayload();
+        console.log("ยังไม่ได้ใส่ WEB_APP_URL ข้อมูลทดสอบ:", payloadForTest);
+        showPopup("error", "ยังไม่ได้ตั้งค่า URL", "กรุณาใส่ WEB_APP_URL จาก Google Apps Script ก่อนใช้งานจริงค่ะ");
+        return;
+      }
 
-  const payload = buildPayload();
+      const payload = buildPayload();
 
-  try {
-    isSubmitting = true;
-    setSubmitLoading(true);
+      try {
+        isSubmitting = true;
+        setSubmitLoading(true);
+        showPopup("loading", "กำลังบันทึกข้อมูล", "รอสักครู่นะคะ ระบบกำลังส่งข้อมูลไปยัง Google Sheet และ Google Drive...", {
+          hideButton: true
+        });
 
-    submitToAppsScript(payload);
+        const result = await submitToAppsScript(payload);
 
-    alert("ส่งข้อมูลแล้ว กรุณาตรวจสอบ Google Sheet");
-    goHomeAndClear();
+        if (!result || result.success !== true) {
+          throw new Error(result && result.message ? result.message : "Apps Script แจ้งว่าบันทึกไม่สำเร็จ");
+        }
 
-  } catch (error) {
-    console.error(error);
-    alert("ส่งข้อมูลไม่สำเร็จ");
-  } finally {
-    isSubmitting = false;
-    setSubmitLoading(false);
-  }
-}
+        showPopup("success", "บันทึกสำเร็จแล้วค่ะ", "ข้อมูลถูกบันทึกเข้า Google Sheet แล้ว\nรูปภาพถูกเก็บใน Google Drive เรียบร้อยค่ะ 💗", {
+          buttonText: "กลับหน้าแรก",
+          onClose: function () {
+            goHomeAndClear();
+          }
+        });
 
-function submitToAppsScript(payload) {
-  const iframeName = "hiddenSubmitFrame";
+      } catch (error) {
+        console.error(error);
+        showPopup("error", "บันทึกไม่สำเร็จ", "กรุณาตรวจสอบ Web App URL, สิทธิ์การเข้าถึง Apps Script, Sheet ID หรือ Folder ID\n\nรายละเอียด: " + error.message, {
+          buttonText: "ลองใหม่"
+        });
+      } finally {
+        isSubmitting = false;
+        setSubmitLoading(false);
+      }
+    }
 
-  let iframe = document.getElementById(iframeName);
-  if (!iframe) {
-    iframe = document.createElement("iframe");
-    iframe.name = iframeName;
-    iframe.id = iframeName;
-    iframe.style.display = "none";
-    document.body.appendChild(iframe);
-  }
+    function submitToAppsScript(payload) {
+      return new Promise((resolve, reject) => {
+        const iframeName = "hiddenSubmitFrame";
+        let form = null;
 
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = WEB_APP_URL;
-  form.target = iframeName;
-  form.style.display = "none";
+        const timeout = setTimeout(() => {
+          window.removeEventListener("message", messageHandler);
+          if (form && form.parentNode) form.parentNode.removeChild(form);
+          reject(new Error("ไม่ได้รับการตอบกลับจาก Apps Script ภายในเวลาที่กำหนด"));
+        }, 45000);
 
-  const input = document.createElement("input");
-  input.type = "hidden";
-  input.name = "payload";
-  input.value = JSON.stringify(payload);
+        function messageHandler(event) {
+          const data = event.data;
 
-  form.appendChild(input);
-  document.body.appendChild(form);
+          if (!data || data.source !== "hira-apps-script") return;
 
-  form.submit();
+          clearTimeout(timeout);
+          window.removeEventListener("message", messageHandler);
 
-  setTimeout(() => {
-    document.body.removeChild(form);
-  }, 1000);
-}
+          if (form && form.parentNode) {
+            form.parentNode.removeChild(form);
+          }
+
+          resolve(data);
+        }
+
+        window.addEventListener("message", messageHandler);
+
+        let iframe = document.getElementById(iframeName);
+        if (!iframe) {
+          iframe = document.createElement("iframe");
+          iframe.name = iframeName;
+          iframe.id = iframeName;
+          iframe.style.display = "none";
+          document.body.appendChild(iframe);
+        }
+
+        form = document.createElement("form");
+        form.method = "POST";
+        form.action = WEB_APP_URL;
+        form.target = iframeName;
+        form.style.display = "none";
+
+        const input = document.createElement("textarea");
+        input.name = "payload";
+        input.value = JSON.stringify(payload);
+
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+      });
+    }
+
+    let popupCloseAction = null;
+
+    function showPopup(type, title, message, options = {}) {
+      const overlay = document.getElementById("cutePopup");
+      const card = document.getElementById("popupCard");
+      const icon = document.getElementById("popupIcon");
+      const titleEl = document.getElementById("popupTitle");
+      const messageEl = document.getElementById("popupMessage");
+      const closeBtn = document.getElementById("popupCloseBtn");
+
+      popupCloseAction = typeof options.onClose === "function" ? options.onClose : null;
+
+      card.className = "popup-card " + (type || "");
+      titleEl.textContent = title || "แจ้งเตือน";
+      messageEl.textContent = message || "";
+
+      if (type === "loading") {
+        icon.innerHTML = '<div class="popup-spinner"></div>';
+      } else if (type === "success") {
+        icon.textContent = "✅";
+      } else if (type === "error") {
+        icon.textContent = "🌷";
+      } else {
+        icon.textContent = "🌸";
+      }
+
+      closeBtn.textContent = options.buttonText || "ตกลงค่ะ";
+      closeBtn.style.display = options.hideButton ? "none" : "block";
+
+      overlay.classList.add("show");
+      overlay.setAttribute("aria-hidden", "false");
+    }
+
+    function hidePopup() {
+      const overlay = document.getElementById("cutePopup");
+      overlay.classList.remove("show");
+      overlay.setAttribute("aria-hidden", "true");
+
+      const action = popupCloseAction;
+      popupCloseAction = null;
+
+      if (typeof action === "function") {
+        action();
+      }
+    }
+
 
     function buildPayload() {
       return {
