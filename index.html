@@ -3,30 +3,396 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FR-SHE-50-114 HIRA Online Form</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>HIRA Online Form</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: Arial, "Noto Sans Thai", sans-serif;
+      background: #f4f6f8;
+      color: #111;
+    }
+
+    body {
+      min-height: 100dvh;
+    }
+
+    .app {
+      width: 100%;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen {
+      display: none;
+      width: 100%;
+      min-height: 100dvh;
+      padding: 20px;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* หน้าแรก */
+    .home-screen {
+      align-items: center;
+      justify-content: center;
+    }
+
+    .home-card {
+      width: 100%;
+      max-width: 560px;
+      background: #fff;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .home-title {
+      font-size: clamp(24px, 5vw, 38px);
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .home-subtitle {
+      font-size: clamp(14px, 3vw, 18px);
+      color: #666;
+      margin-bottom: 28px;
+    }
+
+    .home-buttons {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .main-btn {
+      width: 100%;
+      min-height: 76px;
+      border: none;
+      border-radius: 18px;
+      font-size: clamp(18px, 4vw, 26px);
+      font-weight: 800;
+      cursor: pointer;
+      background: #111;
+      color: #fff;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.14);
+    }
+
+    .main-btn.secondary {
+      background: #ffffff;
+      color: #111;
+      border: 2px solid #111;
+    }
+
+    .main-btn:active,
+    .nav-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* หน้าฟอร์ม */
+    .form-screen {
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 16px;
+    }
+
+    .form-header {
+      width: 100%;
+      max-width: 1100px;
+      background: #fff;
+      border-radius: 18px;
+      padding: 14px 18px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .form-title {
+      font-size: clamp(18px, 3vw, 28px);
+      font-weight: 900;
+    }
+
+    .page-count {
+      font-size: clamp(14px, 2.5vw, 18px);
+      font-weight: 700;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .form-page {
+      width: 100%;
+      max-width: 1100px;
+      flex: 1;
+      min-height: 520px;
+      background: #fff;
+      border-radius: 18px;
+      border: 1px solid #ddd;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .blank-area {
+      width: 100%;
+      height: 100%;
+      min-height: 480px;
+      border: 2px dashed #d8d8d8;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      font-size: clamp(20px, 5vw, 48px);
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .nav-bar {
+      width: 100%;
+      max-width: 1100px;
+      background: #fff;
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      position: sticky;
+      bottom: 12px;
+    }
+
+    .nav-btn {
+      flex: 1;
+      min-height: 60px;
+      border: none;
+      border-radius: 14px;
+      font-size: clamp(17px, 3.5vw, 24px);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .back-btn {
+      background: #e9ecef;
+      color: #111;
+    }
+
+    .next-btn {
+      background: #111;
+      color: #fff;
+    }
+
+    .submit-btn {
+      background: #0b7a33;
+      color: #fff;
+    }
+
+    /* รองรับจอ iPad / คอม */
+    @media (min-width: 768px) {
+      .screen {
+        padding: 32px;
+      }
+
+      .home-buttons {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .form-page {
+        min-height: 620px;
+      }
+
+      .blank-area {
+        min-height: 580px;
+      }
+
+      .nav-btn {
+        max-width: 260px;
+      }
+
+      .nav-bar {
+        justify-content: flex-end;
+      }
+    }
+
+    /* รองรับมือถือจอเล็ก */
+    @media (max-width: 480px) {
+      .screen {
+        padding: 12px;
+      }
+
+      .home-card {
+        padding: 22px;
+        border-radius: 20px;
+      }
+
+      .form-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .form-page {
+        min-height: calc(100dvh - 230px);
+        padding: 12px;
+      }
+
+      .blank-area {
+        min-height: calc(100dvh - 260px);
+      }
+
+      .nav-bar {
+        bottom: 8px;
+        padding: 10px;
+      }
+
+      .nav-btn {
+        min-height: 56px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <div class="toolbar no-print">
-    <div>
-      <strong>FR-SHE-50-114 HIRA Online Form</strong>
-      <span class="hint">กรอกข้อมูลบนแบบฟอร์ม และแนบรูปได้ 1 รูป</span>
-    </div>
+  <div class="app">
+
+    <!-- หน้าแรก -->
+    <section id="homeScreen" class="screen home-screen active">
+      <div class="home-card">
+        <div class="home-title">HIRA Online System</div>
+        <div class="home-subtitle">เลือกเมนูที่ต้องการใช้งาน</div>
+
+        <div class="home-buttons">
+          <button class="main-btn" type="button" onclick="openForm()">
+            FR-SHE-50-114
+          </button>
+
+          <button class="main-btn secondary" type="button" onclick="openSavedData()">
+            ข้อมูลที่บันทึก
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- หน้าฟอร์ม FR-SHE-50-114 -->
+    <section id="formScreen" class="screen form-screen">
+      <div class="form-header">
+        <div class="form-title">FR-SHE-50-114</div>
+        <div class="page-count">
+          หน้า <span id="currentPageText">1</span> / 13
+        </div>
+      </div>
+
+      <main class="form-page">
+        <div class="blank-area">
+          หน้า <span id="pageNumberDisplay">1</span>
+        </div>
+      </main>
+
+      <div class="nav-bar">
+        <button id="backBtn" class="nav-btn back-btn" type="button" onclick="goBack()">
+          ย้อนกลับ
+        </button>
+
+        <button id="nextBtn" class="nav-btn next-btn" type="button" onclick="goNext()">
+          ถัดไป
+        </button>
+
+        <button id="submitBtn" class="nav-btn submit-btn" type="button" onclick="submitData()" style="display:none;">
+          ส่งข้อมูล
+        </button>
+      </div>
+    </section>
+
   </div>
 
-  <form id="hiraForm" autocomplete="off">
-    <div id="page" class="page" aria-label="Hazard Identification and Risk Assessment form page">
-      <!-- Fields are generated by app.js to keep all positions in one place. -->
-    </div>
-  </form>
+  <script>
+    const totalPages = 13;
+    let currentPage = 1;
 
-  <div class="footer no-print">
-    <p><b>หมายเหตุ:</b> ถ้ายังไม่ได้ตั้งค่า Google Apps Script ระบบจะดาวน์โหลดไฟล์ JSON แทนการส่งข้อมูลออนไลน์</p>
-    <p id="saveStatus"></p>
-  </div>
+    const homeScreen = document.getElementById("homeScreen");
+    const formScreen = document.getElementById("formScreen");
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="app.js"></script>
+    const currentPageText = document.getElementById("currentPageText");
+    const pageNumberDisplay = document.getElementById("pageNumberDisplay");
+
+    const nextBtn = document.getElementById("nextBtn");
+    const submitBtn = document.getElementById("submitBtn");
+
+    function showScreen(screenName) {
+      homeScreen.classList.remove("active");
+      formScreen.classList.remove("active");
+
+      if (screenName === "home") {
+        homeScreen.classList.add("active");
+      }
+
+      if (screenName === "form") {
+        formScreen.classList.add("active");
+      }
+    }
+
+    function openForm() {
+      currentPage = 1;
+      updatePage();
+      showScreen("form");
+    }
+
+    function openSavedData() {
+      alert("เมนูข้อมูลที่บันทึก จะทำในขั้นตอนถัดไป");
+    }
+
+    function updatePage() {
+      currentPageText.textContent = currentPage;
+      pageNumberDisplay.textContent = currentPage;
+
+      if (currentPage === totalPages) {
+        nextBtn.style.display = "none";
+        submitBtn.style.display = "block";
+      } else {
+        nextBtn.style.display = "block";
+        submitBtn.style.display = "none";
+      }
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    function goNext() {
+      if (currentPage < totalPages) {
+        currentPage++;
+        updatePage();
+      }
+    }
+
+    function goBack() {
+      if (currentPage === 1) {
+        showScreen("home");
+        return;
+      }
+
+      currentPage--;
+      updatePage();
+    }
+
+    function submitData() {
+      alert("ส่งข้อมูลเรียบร้อยแล้ว ขั้นตอนถัดไปจะเชื่อม Google Drive");
+    }
+  </script>
 </body>
 </html>
