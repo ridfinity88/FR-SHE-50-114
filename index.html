@@ -96,7 +96,9 @@
     }
 
     .main-btn:active,
-    .nav-btn:active {
+    .nav-btn:active,
+    .home-link-btn:active,
+    .hazard-btn:active {
       transform: scale(0.98);
     }
 
@@ -126,10 +128,15 @@
       font-weight: 900;
     }
 
-    .page-count {
+    .home-link-btn {
+      border: none;
+      background: #f1f3f5;
+      color: #111;
+      border-radius: 999px;
+      padding: 10px 18px;
       font-size: clamp(14px, 2.5vw, 18px);
-      font-weight: 700;
-      color: #555;
+      font-weight: 900;
+      cursor: pointer;
       white-space: nowrap;
     }
 
@@ -143,9 +150,15 @@
       border: 1px solid #ddd;
       box-shadow: 0 6px 20px rgba(0,0,0,0.06);
       display: flex;
-      align-items: center;
+      align-items: stretch;
       justify-content: center;
       padding: 20px;
+    }
+
+    .page-content {
+      width: 100%;
+      min-height: 480px;
+      border-radius: 14px;
     }
 
     .blank-area {
@@ -158,9 +171,52 @@
       align-items: center;
       justify-content: center;
       color: #aaa;
-      font-size: clamp(20px, 5vw, 48px);
+      font-size: clamp(20px, 5vw, 42px);
       font-weight: 800;
       text-align: center;
+    }
+
+    .hazard-page {
+      width: 100%;
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .hazard-title {
+      font-size: clamp(20px, 4vw, 32px);
+      font-weight: 900;
+      text-align: center;
+      margin: 4px 0 8px 0;
+    }
+
+    .hazard-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .hazard-btn {
+      width: 100%;
+      min-height: 68px;
+      border: 1px solid #d9d9d9;
+      border-radius: 14px;
+      background: #fff;
+      color: #111;
+      padding: 14px 16px;
+      font-size: clamp(15px, 3.5vw, 20px);
+      font-weight: 800;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      line-height: 1.35;
+    }
+
+    .hazard-btn:hover {
+      background: #f8f9fa;
+      border-color: #111;
     }
 
     .nav-bar {
@@ -202,7 +258,6 @@
       color: #fff;
     }
 
-    /* รองรับจอ iPad / คอม */
     @media (min-width: 768px) {
       .screen {
         padding: 32px;
@@ -216,8 +271,13 @@
         min-height: 620px;
       }
 
-      .blank-area {
+      .blank-area,
+      .hazard-page {
         min-height: 580px;
+      }
+
+      .hazard-grid {
+        grid-template-columns: 1fr 1fr;
       }
 
       .nav-btn {
@@ -229,7 +289,12 @@
       }
     }
 
-    /* รองรับมือถือจอเล็ก */
+    @media (min-width: 1100px) {
+      .hazard-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
     @media (max-width: 480px) {
       .screen {
         padding: 12px;
@@ -241,8 +306,7 @@
       }
 
       .form-header {
-        flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
       }
 
       .form-page {
@@ -250,7 +314,8 @@
         padding: 12px;
       }
 
-      .blank-area {
+      .blank-area,
+      .hazard-page {
         min-height: calc(100dvh - 260px);
       }
 
@@ -261,6 +326,10 @@
 
       .nav-btn {
         min-height: 56px;
+      }
+
+      .hazard-btn {
+        min-height: 62px;
       }
     }
   </style>
@@ -291,15 +360,14 @@
     <section id="formScreen" class="screen form-screen">
       <div class="form-header">
         <div class="form-title">FR-SHE-50-114</div>
-        <div class="page-count">
-          หน้า <span id="currentPageText">1</span> / 13
-        </div>
+
+        <button class="home-link-btn" type="button" onclick="goHomeAndClear()">
+          หน้าแรก
+        </button>
       </div>
 
       <main class="form-page">
-        <div class="blank-area">
-          หน้า <span id="pageNumberDisplay">1</span>
-        </div>
+        <div id="pageContent" class="page-content"></div>
       </main>
 
       <div class="nav-bar">
@@ -320,17 +388,29 @@
   </div>
 
   <script>
-    const totalPages = 13;
+    const totalPages = 2;
     let currentPage = 1;
 
     const homeScreen = document.getElementById("homeScreen");
     const formScreen = document.getElementById("formScreen");
-
-    const currentPageText = document.getElementById("currentPageText");
-    const pageNumberDisplay = document.getElementById("pageNumberDisplay");
+    const pageContent = document.getElementById("pageContent");
 
     const nextBtn = document.getElementById("nextBtn");
     const submitBtn = document.getElementById("submitBtn");
+
+    const hazardList = [
+      "1. MECHANICAL HAZARDS (อันตรายเชิงกล)",
+      "2. ELECTRICAL HAZARDS (อันตรายทางไฟฟ้า)",
+      "3. THERMAL HAZARDS (อันตรายจากความร้อน)",
+      "4. NOISE HAZARDS (อันตรายจากเสียงดัง)",
+      "5. Confined Space (อันตรายจากที่อับอากาศ)",
+      "6. RADIATION HAZARDS (อันตรายจากรังสี)",
+      "7. MATERIAL / SUBSTANCES (วัสดุ/สารเคมีเป็นอันตราย) Harmful materials (วัสดุอันตราย)",
+      "8. ERGONOMICS (การยศาสตร์) Postures / excessive efforts (ท่าทาง/ใช้แรงเกินกำลัง)",
+      "9. FALLING OR EJECTED OBJECTS (วัตถุตกหล่น/กระเด็น)",
+      "10. LOSS OF STABILITY / OVERTURNING (การล้มคว่ำ/เสียสมดุล)",
+      "11. SLIP / TRIP / FALL (ลื่น/สะดุด/ตกจากที่สูง)"
+    ];
 
     function showScreen(screenName) {
       homeScreen.classList.remove("active");
@@ -356,8 +436,32 @@
     }
 
     function updatePage() {
-      currentPageText.textContent = currentPage;
-      pageNumberDisplay.textContent = currentPage;
+      if (currentPage === 1) {
+        pageContent.innerHTML = `
+          <div class="blank-area">
+            หน้า 1
+          </div>
+        `;
+      }
+
+      if (currentPage === 2) {
+        pageContent.innerHTML = `
+          <div class="hazard-page">
+            <div class="hazard-title">เลือกหมวดอันตราย</div>
+            <div class="hazard-grid">
+              ${hazardList.map((item, index) => `
+                <button
+                  class="hazard-btn"
+                  type="button"
+                  onclick="selectHazard(${index})"
+                >
+                  ${item}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
 
       if (currentPage === totalPages) {
         nextBtn.style.display = "none";
@@ -382,12 +486,37 @@
 
     function goBack() {
       if (currentPage === 1) {
-        showScreen("home");
+        goHomeAndClear();
         return;
       }
 
       currentPage--;
       updatePage();
+    }
+
+    function goHomeAndClear() {
+      clearAllData();
+      currentPage = 1;
+      showScreen("home");
+    }
+
+    function clearAllData() {
+      const inputs = document.querySelectorAll("input, textarea, select");
+
+      inputs.forEach(el => {
+        if (el.type === "checkbox" || el.type === "radio") {
+          el.checked = false;
+        } else {
+          el.value = "";
+        }
+      });
+
+      pageContent.innerHTML = "";
+    }
+
+    function selectHazard(index) {
+      const selectedHazard = hazardList[index];
+      alert("เลือก: " + selectedHazard);
     }
 
     function submitData() {
