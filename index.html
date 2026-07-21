@@ -1093,41 +1093,68 @@
       renderBasicPage();
     }
 
-    async function submitData() {
-      if (isSubmitting) return;
+function submitData() {
+  if (isSubmitting) return;
 
-      if (!WEB_APP_URL || WEB_APP_URL.includes("https://script.google.com/macros/s/AKfycbwIy_C1i68v4_6iwzVEPaENc_FkEA6ytcM1M9E4yY7L_gBzlQCvd9C0wqV2kghViEmY/exec")) {
-        const payloadForTest = buildPayload();
-        console.log("ยังไม่ได้ใส่ WEB_APP_URL ข้อมูลทดสอบ:", payloadForTest);
-        alert("ยังไม่ได้ใส่ WEB_APP_URL จาก Google Apps Script กรุณาใส่ URL ก่อนใช้งานจริง");
-        return;
-      }
+  if (!WEB_APP_URL || WEB_APP_URL.includes("ใส่_WEB_APP_URL")) {
+    const payloadForTest = buildPayload();
+    console.log("ยังไม่ได้ใส่ WEB_APP_URL ข้อมูลทดสอบ:", payloadForTest);
+    alert("ยังไม่ได้ใส่ WEB_APP_URL จาก Google Apps Script กรุณาใส่ URL ก่อนใช้งานจริง");
+    return;
+  }
 
-      const payload = buildPayload();
+  const payload = buildPayload();
 
-      try {
-        isSubmitting = true;
-        setSubmitLoading(true);
+  try {
+    isSubmitting = true;
+    setSubmitLoading(true);
 
-        await fetch(WEB_APP_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8"
-          },
-          body: JSON.stringify(payload)
-        });
+    submitToAppsScript(payload);
 
-        alert("ส่งข้อมูลไปยัง Google Sheet แล้ว");
-        goHomeAndClear();
-      } catch (error) {
-        console.error(error);
-        alert("ส่งข้อมูลไม่สำเร็จ กรุณาตรวจสอบ Web App URL หรือการตั้งค่า Apps Script");
-      } finally {
-        isSubmitting = false;
-        setSubmitLoading(false);
-      }
-    }
+    alert("ส่งข้อมูลแล้ว กรุณาตรวจสอบ Google Sheet");
+    goHomeAndClear();
+
+  } catch (error) {
+    console.error(error);
+    alert("ส่งข้อมูลไม่สำเร็จ");
+  } finally {
+    isSubmitting = false;
+    setSubmitLoading(false);
+  }
+}
+
+function submitToAppsScript(payload) {
+  const iframeName = "hiddenSubmitFrame";
+
+  let iframe = document.getElementById(iframeName);
+  if (!iframe) {
+    iframe = document.createElement("iframe");
+    iframe.name = iframeName;
+    iframe.id = iframeName;
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+  }
+
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = WEB_APP_URL;
+  form.target = iframeName;
+  form.style.display = "none";
+
+  const input = document.createElement("input");
+  input.type = "hidden";
+  input.name = "payload";
+  input.value = JSON.stringify(payload);
+
+  form.appendChild(input);
+  document.body.appendChild(form);
+
+  form.submit();
+
+  setTimeout(() => {
+    document.body.removeChild(form);
+  }, 1000);
+}
 
     function buildPayload() {
       return {
