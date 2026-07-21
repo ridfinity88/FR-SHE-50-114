@@ -1096,7 +1096,7 @@
 function submitData() {
   if (isSubmitting) return;
 
-  if (!WEB_APP_URL || WEB_APP_URL.includes("ใส่_WEB_APP_URL")) {
+  if (!WEB_APP_URL || WEB_APP_URL.includes("https://script.google.com/macros/s/AKfycbxDM5vwSYm91WKg_zXpdIZzxMPPHI8iS_dcJHH4CLiHN2v5n-HTm_FcLRsnd0FHonOG/exec")) {
     const payloadForTest = buildPayload();
     console.log("ยังไม่ได้ใส่ WEB_APP_URL ข้อมูลทดสอบ:", payloadForTest);
     alert("ยังไม่ได้ใส่ WEB_APP_URL จาก Google Apps Script กรุณาใส่ URL ก่อนใช้งานจริง");
