@@ -36,27 +36,6 @@
       width: 100%;
       min-height: 100dvh;
       padding: 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .screen > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .screen::after {
-      content: "RiDFINITY";
-      position: absolute;
-      right: 18px;
-      bottom: 12px;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      color: rgba(0, 0, 0, 0.10);
-      pointer-events: none;
-      user-select: none;
-      z-index: 0;
     }
 
     .screen.active { display: flex; }
@@ -74,6 +53,8 @@
       padding: 28px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
 
     .home-title {
@@ -170,6 +151,8 @@
       align-items: stretch;
       justify-content: center;
       padding: 20px;
+      position: relative;
+      overflow: hidden;
     }
 
     .page-content {
@@ -571,20 +554,6 @@
       overflow: hidden;
     }
 
-    .watermark-text {
-      position: absolute;
-      right: 16px;
-      bottom: 12px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      color: rgba(0, 0, 0, 0.12);
-      pointer-events: none;
-      user-select: none;
-      z-index: 3;
-      text-transform: uppercase;
-    }
-
     .success-main-title {
       text-align: center;
       font-size: clamp(24px, 5vw, 44px);
@@ -614,23 +583,6 @@
       align-items: center;
       justify-content: center;
       position: relative;
-    }
-
-    .image-watermark {
-      position: absolute;
-      right: 14px;
-      bottom: 10px;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.16em;
-      color: rgba(0, 0, 0, 0.12);
-      pointer-events: none;
-      user-select: none;
-      z-index: 2;
-      text-transform: uppercase;
-      background: rgba(255,255,255,0.25);
-      padding: 2px 4px;
-      border-radius: 6px;
     }
 
     .success-image-box img {
@@ -734,6 +686,54 @@
       box-shadow: 0 6px 14px rgba(6,199,85,0.25);
     }
 
+
+    .home-card::after,
+    .form-page::after,
+    .saved-card::after,
+    .admin-card::after,
+    .admin-password-card::after,
+    .success-share-card::after {
+      content: "RiDFINITY";
+      position: absolute;
+      right: 16px;
+      bottom: 10px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      color: rgba(0, 0, 0, 0.12);
+      text-transform: uppercase;
+      pointer-events: none;
+      user-select: none;
+      z-index: 2;
+    }
+
+    .home-card > *,
+    .form-page > *,
+    .saved-card > *,
+    .admin-card > *,
+    .admin-password-card > *,
+    .success-share-card > * {
+      position: relative;
+      z-index: 3;
+    }
+
+    .image-watermark {
+      position: absolute;
+      right: 12px;
+      bottom: 8px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      color: rgba(0, 0, 0, 0.14);
+      text-transform: uppercase;
+      pointer-events: none;
+      user-select: none;
+      z-index: 3;
+      background: rgba(255, 255, 255, 0.28);
+      border-radius: 6px;
+      padding: 2px 4px;
+    }
+
     @media (max-width: 480px) {
       .popup-overlay {
         padding: 10px 6px;
@@ -828,6 +828,8 @@
       display: flex;
       flex-direction: column;
       gap: 18px;
+      position: relative;
+      overflow: hidden;
     }
 
     .saved-header {
@@ -991,6 +993,8 @@
       padding: 30px;
       box-shadow: 0 14px 40px rgba(0,0,0,0.10);
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
 
     .admin-title {
@@ -1065,6 +1069,8 @@
       text-align: center;
       box-shadow: 0 20px 60px rgba(0,0,0,0.26);
       animation: popupIn 0.22s ease-out;
+      position: relative;
+      overflow: hidden;
     }
 
     .admin-password-icon {
@@ -1160,26 +1166,6 @@
       cursor: not-allowed;
     }
 
-
-    @media (max-width: 768px) {
-      .screen::after {
-        right: 12px;
-        bottom: 10px;
-        font-size: 10px;
-      }
-
-      .watermark-text {
-        right: 12px;
-        bottom: 10px;
-        font-size: 10px;
-      }
-
-      .image-watermark {
-        right: 10px;
-        bottom: 8px;
-        font-size: 9px;
-      }
-    }
 
     @keyframes popupIn {
       from { opacity: 0; transform: translateY(12px) scale(0.96); }
@@ -1385,7 +1371,6 @@
       <div id="popupSuccess" class="popup-success">
         <div id="successShareCard" class="success-share-card">
           <div class="success-main-title">บันทึกสำเร็จ</div>
-          <div class="watermark-text">RiDFINITY</div>
 
           <div class="success-landscape">
             <div id="successImageBox" class="success-image-box">
@@ -2545,17 +2530,7 @@ const PDF_HEADER_FIELDS = {
 
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({
-            files: [file],
-            title: "HIRA Online Form",
-            text: "บันทึกสำเร็จ"
-          });
-          return;
-        }
-
-        if (navigator.share) {
-          await navigator.share({
-            title: "HIRA Online Form",
-            text: "บันทึกสำเร็จ"
+            files: [file]
           });
           return;
         }
