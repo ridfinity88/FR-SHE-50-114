@@ -47,7 +47,7 @@
 
     .home-card {
       width: 100%;
-      max-width: 560px;
+      max-width: 760px;
       background: #fff;
       border-radius: 24px;
       padding: 28px;
@@ -90,6 +90,12 @@
       background: #fff;
       color: #111;
       border: 2px solid #111;
+    }
+
+    .main-btn.admin-btn {
+      background: linear-gradient(135deg, #3b2f8f 0%, #6d4aff 100%);
+      color: #fff;
+      border: none;
     }
 
     .form-screen {
@@ -747,6 +753,191 @@
       }
     }
 
+
+
+    .admin-screen {
+      align-items: center;
+      justify-content: center;
+    }
+
+    .admin-card {
+      width: 100%;
+      max-width: 720px;
+      background: #fff;
+      border-radius: 28px;
+      padding: 30px;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.10);
+      text-align: center;
+    }
+
+    .admin-title {
+      font-size: clamp(26px, 5vw, 40px);
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .admin-subtitle {
+      font-size: clamp(15px, 3vw, 18px);
+      color: #666;
+      margin-bottom: 26px;
+    }
+
+    .admin-menu {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .admin-menu-btn {
+      width: 100%;
+      min-height: 70px;
+      border: none;
+      border-radius: 18px;
+      background: #111;
+      color: #fff;
+      font-size: clamp(18px, 4vw, 24px);
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+    }
+
+    .admin-menu-btn.drive-btn {
+      background: #0b7a33;
+    }
+
+    .admin-back-btn {
+      margin-top: 18px;
+      min-height: 52px;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 999px;
+      background: #e9ecef;
+      color: #111;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .admin-popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.42);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 20px;
+    }
+
+    .admin-popup-overlay.show {
+      display: flex;
+    }
+
+    .admin-password-card {
+      width: 100%;
+      max-width: 440px;
+      background: #fff;
+      border-radius: 28px;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.26);
+      animation: popupIn 0.22s ease-out;
+    }
+
+    .admin-password-icon {
+      font-size: 46px;
+      margin-bottom: 8px;
+    }
+
+    .admin-password-title {
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .admin-password-note {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 18px;
+      line-height: 1.45;
+    }
+
+    .password-input-wrap {
+      position: relative;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .password-input-wrap input {
+      width: 100%;
+      min-height: 58px;
+      border: 1px solid #d0d0d0;
+      border-radius: 16px;
+      padding: 12px 58px 12px 16px;
+      font-size: 22px;
+      outline: none;
+      letter-spacing: 1px;
+    }
+
+    .password-input-wrap input:focus {
+      border-color: #111;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
+    }
+
+    .toggle-password-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      background: #f1f3f5;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .admin-password-error {
+      min-height: 22px;
+      color: #e03131;
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .admin-password-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .admin-password-actions button {
+      min-height: 52px;
+      border: none;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .admin-cancel-btn {
+      background: #e9ecef;
+      color: #111;
+    }
+
+    .admin-confirm-btn {
+      background: #111;
+      color: #fff;
+    }
+
+    .admin-confirm-btn:disabled {
+      background: #c9c9c9;
+      color: #777;
+      cursor: not-allowed;
+    }
+
+
     @keyframes popupIn {
       from { opacity: 0; transform: translateY(12px) scale(0.96); }
       to { opacity: 1; transform: translateY(0) scale(1); }
@@ -766,7 +957,8 @@
 
     @media (min-width: 768px) {
       .screen { padding: 32px; }
-      .home-buttons { grid-template-columns: 1fr 1fr; }
+      .home-buttons { grid-template-columns: repeat(3, 1fr); }
+      .admin-menu { grid-template-columns: 1fr 1fr; }
       .form-page { min-height: 620px; }
 
       .page-one,
@@ -840,6 +1032,10 @@
           <button class="main-btn secondary" type="button" onclick="openSavedData()">
             ข้อมูลที่บันทึก
           </button>
+
+          <button class="main-btn admin-btn" type="button" onclick="openAdminPasswordPopup()">
+            ADMIN
+          </button>
         </div>
       </div>
     </section>
@@ -858,6 +1054,27 @@
       </main>
 
       <div id="navBar" class="nav-bar"></div>
+    </section>
+
+    <section id="adminScreen" class="screen admin-screen">
+      <div class="admin-card">
+        <div class="admin-title">ADMIN</div>
+        <div class="admin-subtitle">เลือกเมนูที่ต้องการเปิดดูข้อมูล</div>
+
+        <div class="admin-menu">
+          <button class="admin-menu-btn" type="button" onclick="openAdminLink(ADMIN_SHEET_URL)">
+            ดูข้อมูลใน Sheet
+          </button>
+
+          <button class="admin-menu-btn drive-btn" type="button" onclick="openAdminLink(ADMIN_DRIVE_URL)">
+            ดู PDF ใน Drive
+          </button>
+        </div>
+
+        <button class="admin-back-btn" type="button" onclick="goHomeAndClear()">
+          กลับหน้าแรก
+        </button>
+      </div>
     </section>
 
   </div>
@@ -937,8 +1154,43 @@
     </div>
   </div>
 
+  <div id="adminPasswordPopup" class="admin-popup-overlay">
+    <div class="admin-password-card">
+      <div class="admin-password-icon">🔐</div>
+      <div class="admin-password-title">Admin Login</div>
+      <div class="admin-password-note">กรุณาใส่รหัสผ่านเพื่อเข้าสู่เมนูผู้ดูแลระบบ</div>
+
+      <div class="password-input-wrap">
+        <input
+          id="adminPasswordInput"
+          type="password"
+          inputmode="text"
+          autocomplete="current-password"
+          placeholder="••••••••"
+          onkeydown="if(event.key === 'Enter') submitAdminPassword()"
+        />
+        <button id="togglePasswordBtn" class="toggle-password-btn" type="button" onclick="toggleAdminPassword()" aria-label="แสดงหรือซ่อนรหัสผ่าน">
+          👁️
+        </button>
+      </div>
+
+      <div id="adminPasswordError" class="admin-password-error"></div>
+
+      <div class="admin-password-actions">
+        <button class="admin-cancel-btn" type="button" onclick="closeAdminPasswordPopup()">
+          ยกเลิก
+        </button>
+        <button id="adminConfirmBtn" class="admin-confirm-btn" type="button" onclick="submitAdminPassword()">
+          เข้าสู่ระบบ
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbymckTzAawrj7K9Rl22nLbDHgi8ml3Ysx9QnbpDCa6FkUlrZK65A-motxZ2Msjxk0Wp/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyA518wxpV-jy8whTaMyHyP6Cw4zAkkKWfKaRzI--scjFVzSYUxaq20t7blM27b9zIR/exec";
+    const ADMIN_SHEET_URL = "https://docs.google.com/spreadsheets/d/1wRIC1nNoyEQzAz6kWRHZgJMxtXZP8TdSSudz2EZx-RM/edit?usp=sharing";
+    const ADMIN_DRIVE_URL = "https://drive.google.com/drive/folders/1-KEGrSNVJPkr9xcs4oWF6fQZXEIxaanx?usp=sharing";
 
     const PDF_TEMPLATE_URL = "./templates/FR-SHE-50-114_Rev0.pdf";
     const THAI_FONT_URL = "./fonts/NotoSansThai-Regular.ttf";
@@ -946,6 +1198,8 @@
     let currentPage = "basic";
     let activeCategoryIndex = null;
     let isSubmitting = false;
+    let isCheckingAdminPassword = false;
+    let isAdminPasswordVisible = false;
 
     const hazardCategories = [
       {
@@ -1181,6 +1435,7 @@ const PDF_HEADER_FIELDS = {
     const pageContent = document.getElementById("pageContent");
     const navBar = document.getElementById("navBar");
     const formTitle = document.getElementById("formTitle");
+    const adminScreen = document.getElementById("adminScreen");
 
     initializeHazardData();
 
@@ -1202,9 +1457,11 @@ const PDF_HEADER_FIELDS = {
     function showScreen(screenName) {
       homeScreen.classList.remove("active");
       formScreen.classList.remove("active");
+      if (adminScreen) adminScreen.classList.remove("active");
 
       if (screenName === "home") homeScreen.classList.add("active");
       if (screenName === "form") formScreen.classList.add("active");
+      if (screenName === "admin" && adminScreen) adminScreen.classList.add("active");
     }
 
     function openForm() {
@@ -2001,6 +2258,152 @@ const PDF_HEADER_FIELDS = {
         showCutePopup("error");
       }
     }
+
+
+
+    function openAdminPasswordPopup() {
+      const popup = document.getElementById("adminPasswordPopup");
+      const input = document.getElementById("adminPasswordInput");
+      const error = document.getElementById("adminPasswordError");
+
+      if (!popup || !input) return;
+
+      isAdminPasswordVisible = false;
+      input.type = "password";
+      input.value = "";
+      if (error) error.textContent = "";
+      updateTogglePasswordIcon();
+      setAdminChecking(false);
+
+      popup.classList.add("show");
+
+      setTimeout(() => {
+        input.focus();
+      }, 120);
+    }
+
+    function closeAdminPasswordPopup() {
+      const popup = document.getElementById("adminPasswordPopup");
+      if (popup) popup.classList.remove("show");
+      setAdminChecking(false);
+    }
+
+    function toggleAdminPassword() {
+      const input = document.getElementById("adminPasswordInput");
+      if (!input) return;
+
+      isAdminPasswordVisible = !isAdminPasswordVisible;
+      input.type = isAdminPasswordVisible ? "text" : "password";
+      updateTogglePasswordIcon();
+      input.focus();
+    }
+
+    function updateTogglePasswordIcon() {
+      const btn = document.getElementById("togglePasswordBtn");
+      if (btn) {
+        btn.textContent = isAdminPasswordVisible ? "🙈" : "👁️";
+      }
+    }
+
+    async function submitAdminPassword() {
+      if (isCheckingAdminPassword) return;
+
+      const input = document.getElementById("adminPasswordInput");
+      const error = document.getElementById("adminPasswordError");
+      const password = input ? input.value.trim() : "";
+
+      if (error) error.textContent = "";
+
+      if (!password) {
+        if (error) error.textContent = "กรุณาใส่รหัสผ่าน";
+        if (input) input.focus();
+        return;
+      }
+
+      try {
+        setAdminChecking(true);
+        const result = await checkAdminPasswordWithSheet(password);
+
+        if (result && result.success && result.authorized) {
+          closeAdminPasswordPopup();
+          showScreen("admin");
+        } else {
+          if (error) error.textContent = "รหัสผ่านไม่ถูกต้อง";
+          if (input) {
+            input.select();
+            input.focus();
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        if (error) error.textContent = "ไม่สามารถตรวจสอบรหัสผ่านได้ กรุณาลองใหม่";
+      } finally {
+        setAdminChecking(false);
+      }
+    }
+
+    function setAdminChecking(isChecking) {
+      isCheckingAdminPassword = isChecking;
+      const btn = document.getElementById("adminConfirmBtn");
+      const input = document.getElementById("adminPasswordInput");
+
+      if (btn) {
+        btn.disabled = isChecking;
+        btn.textContent = isChecking ? "กำลังตรวจสอบ..." : "เข้าสู่ระบบ";
+      }
+
+      if (input) {
+        input.disabled = isChecking;
+      }
+    }
+
+    function checkAdminPasswordWithSheet(password) {
+      return new Promise((resolve, reject) => {
+        const callbackName = "__hiraAdminCallback_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+        const script = document.createElement("script");
+        const timeoutMs = 30000;
+        let finished = false;
+
+        function cleanup() {
+          finished = true;
+          clearTimeout(timer);
+          if (script.parentNode) script.parentNode.removeChild(script);
+          try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+        }
+
+        const timer = setTimeout(() => {
+          if (finished) return;
+          cleanup();
+          reject(new Error("Admin password check timeout"));
+        }, timeoutMs);
+
+        window[callbackName] = function(response) {
+          if (finished) return;
+          cleanup();
+          resolve(response);
+        };
+
+        script.onerror = function() {
+          if (finished) return;
+          cleanup();
+          reject(new Error("Cannot load Apps Script response"));
+        };
+
+        const url = WEB_APP_URL
+          + "?action=checkAdminPassword"
+          + "&password=" + encodeURIComponent(password)
+          + "&callback=" + encodeURIComponent(callbackName)
+          + "&_=" + Date.now();
+
+        script.src = url;
+        document.body.appendChild(script);
+      });
+    }
+
+    function openAdminLink(url) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
 
     function hideCutePopup() {
       const popup = document.getElementById("cutePopup");
