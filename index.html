@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HIRA Online Form</title>
 
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
+
   <style>
     * { box-sizing: border-box; }
 
@@ -610,7 +613,10 @@
   </div>
 
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwMYihazj5H_crFvp0cbUAniurnmYZsMcGTQPEo_CEUGjT5TmSPrOrbcK0g9S9i9lSa/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbymckTzAawrj7K9Rl22nLbDHgi8ml3Ysx9QnbpDCa6FkUlrZK65A-motxZ2Msjxk0Wp/exec";
+
+    const PDF_TEMPLATE_URL = "./templates/FR-SHE-50-114_Rev0.pdf";
+    const THAI_FONT_URL = "./fonts/NotoSansThai-Regular.ttf";
 
     let currentPage = "basic";
     let activeCategoryIndex = null;
@@ -738,6 +744,90 @@
         ]
       }
     ];
+
+    const PDF_ITEM_POSITIONS = {
+      "1.1": { side: "left", y: 649.0 },
+      "1.2": { side: "left", y: 635.3 },
+      "1.3": { side: "left", y: 621.4 },
+      "1.4": { side: "left", y: 607.5 },
+      "1.5": { side: "left", y: 593.8 },
+      "1.6": { side: "left", y: 580.1 },
+      "1.7": { side: "left", y: 566.2 },
+      "1.8": { side: "left", y: 552.3 },
+      "1.9": { side: "left", y: 538.6 },
+
+      "2.1": { side: "left", y: 511.0 },
+      "2.2": { side: "left", y: 497.1 },
+      "2.3": { side: "left", y: 483.4 },
+      "2.4": { side: "left", y: 469.7 },
+      "2.5": { side: "left", y: 455.8 },
+
+      "3.1.1": { side: "left", y: 428.2 },
+      "3.1.2": { side: "left", y: 414.5 },
+      "3.1.3": { side: "left", y: 400.6 },
+      "3.1.4": { side: "left", y: 386.7 },
+      "3.1.5": { side: "left", y: 373.0 },
+      "3.1.6": { side: "left", y: 359.3 },
+      "3.2": { side: "left", y: 345.4 },
+
+      "4.1": { side: "left", y: 317.8 },
+      "4.2": { side: "left", y: 304.1 },
+
+      "5.1": { side: "left", y: 276.3 },
+      "5.2": { side: "left", y: 262.6 },
+
+      "6.1": { side: "left", y: 235.0 },
+
+      "7.1.1": { side: "right", y: 649.0 },
+      "7.1.2": { side: "right", y: 635.3 },
+      "7.1.3": { side: "right", y: 621.4 },
+      "7.1.4": { side: "right", y: 607.5 },
+      "7.1.5": { side: "right", y: 593.8 },
+      "7.2.1": { side: "right", y: 580.1 },
+      "7.2.2": { side: "right", y: 566.2 },
+      "7.3.1": { side: "right", y: 552.3 },
+      "7.3.2": { side: "right", y: 538.6 },
+
+      "8.1.1": { side: "right", y: 511.0 },
+      "8.1.2": { side: "right", y: 497.1 },
+      "8.1.3": { side: "right", y: 483.4 },
+      "8.1.4": { side: "right", y: 469.7 },
+      "8.2": { side: "right", y: 455.8 },
+      "8.3": { side: "right", y: 441.9 },
+      "8.4": { side: "right", y: 428.2 },
+
+      "9.1": { side: "right", y: 400.6 },
+
+      "10.1": { side: "right", y: 373.0 },
+      "10.2": { side: "right", y: 359.3 },
+      "10.3": { side: "right", y: 345.4 },
+      "10.4": { side: "right", y: 331.5 },
+
+      "11.1": { side: "right", y: 304.1 },
+      "11.2": { side: "right", y: 290.2 },
+      "11.3": { side: "right", y: 276.3 },
+      "11.4": { side: "right", y: 262.6 },
+      "11.5": { side: "right", y: 248.9 },
+      "11.6": { side: "right", y: 235.0 },
+      "11.7": { side: "right", y: 221.1 }
+    };
+
+    const PDF_COLUMNS = {
+      left: {
+        remarkX: 173,
+        remarkW: 80,
+        opX: 265,
+        mtX: 282,
+        otX: 299
+      },
+      right: {
+        remarkX: 425,
+        remarkW: 80,
+        opX: 518,
+        mtX: 536,
+        otX: 554
+      }
+    };
 
     const formData = {
       machineArea: "",
@@ -1186,7 +1276,9 @@
         return;
       }
 
+      const saveDate = getTodayThaiDateText();
       const payload = buildPayload();
+      payload.saveDate = saveDate;
       payload.submissionId = "HIRA_" + Date.now() + "_" + Math.random().toString(36).slice(2);
 
       try {
@@ -1195,8 +1287,22 @@
 
         showCutePopup(
           "loading",
+          "กำลังสร้าง PDF",
+          "ระบบกำลังนำข้อมูลไปเติมใน PDF แม่แบบ กรุณารอสักครู่ค่ะ"
+        );
+
+        const pdfDataUrl = await generateFilledPdfDataUrl(payload);
+        const pdfName = buildPdfFileName(payload.basicInfo.machineArea, saveDate);
+
+        payload.generatedPdf = {
+          name: pdfName,
+          dataUrl: pdfDataUrl
+        };
+
+        showCutePopup(
+          "loading",
           "กำลังบันทึกข้อมูล",
-          "กรุณารอสักครู่ ระบบกำลังส่งข้อมูลไปยัง Google Sheet และ Google Drive ค่ะ"
+          "ระบบกำลังส่งข้อมูลไปยัง Google Sheet และบันทึก PDF / รูปภาพไปยัง Google Drive ค่ะ"
         );
 
         await fetch(WEB_APP_URL, {
@@ -1211,7 +1317,7 @@
         showCutePopup(
           "success",
           "บันทึกสำเร็จ",
-          "ส่งข้อมูลไปยัง Google Sheet แล้วค่ะ\nรูปภาพถูกส่งไปยัง Google Drive เรียบร้อยแล้ว"
+          "ส่งข้อมูลไปยัง Google Sheet แล้วค่ะ\nสร้าง PDF และบันทึกไปยัง Google Drive เรียบร้อยแล้ว"
         );
 
         setTimeout(() => {
@@ -1224,7 +1330,7 @@
         showCutePopup(
           "error",
           "ส่งข้อมูลไม่สำเร็จ",
-          "ไม่สามารถส่งข้อมูลไปยัง Apps Script ได้\nกรุณาตรวจสอบอินเทอร์เน็ตหรือ Web App URL ค่ะ"
+          "รายละเอียด: " + error.message
         );
 
       } finally {
@@ -1249,6 +1355,185 @@
         },
         hazardRows: buildHazardRows()
       };
+    }
+
+    async function generateFilledPdfDataUrl(payload) {
+      if (!window.PDFLib) {
+        throw new Error("ไม่พบ pdf-lib กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต");
+      }
+
+      if (!window.fontkit) {
+        throw new Error("ไม่พบ fontkit กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต");
+      }
+
+      const { PDFDocument, rgb } = PDFLib;
+
+      const templateResponse = await fetch(PDF_TEMPLATE_URL);
+      if (!templateResponse.ok) {
+        throw new Error("ไม่พบไฟล์ PDF แม่แบบใน GitHub: " + PDF_TEMPLATE_URL);
+      }
+
+      const fontResponse = await fetch(THAI_FONT_URL);
+      if (!fontResponse.ok) {
+        throw new Error("ไม่พบไฟล์ฟอนต์ภาษาไทยใน GitHub: " + THAI_FONT_URL);
+      }
+
+      const templateBytes = await templateResponse.arrayBuffer();
+      const fontBytes = await fontResponse.arrayBuffer();
+
+      const pdfDoc = await PDFDocument.load(templateBytes);
+      pdfDoc.registerFontkit(fontkit);
+
+      const thaiFont = await pdfDoc.embedFont(fontBytes, { subset: true });
+      const page = pdfDoc.getPages()[0];
+
+      const black = rgb(0, 0, 0);
+      const basic = payload.basicInfo || {};
+      const hazardRows = payload.hazardRows || [];
+      const saveDate = payload.saveDate || getTodayThaiDateText();
+
+      drawTextFit(page, saveDate, 382, 760, 110, thaiFont, 6.2, black);
+      drawTextFit(page, basic.machineArea || "", 75, 748, 160, thaiFont, 6.2, black);
+      drawTextFit(page, basic.model || "", 365, 748, 150, thaiFont, 6.2, black);
+      drawTextFit(page, basic.plant || "", 55, 736, 170, thaiFont, 6.2, black);
+      drawTextFit(page, basic.serialNo || "", 370, 736, 145, thaiFont, 6.2, black);
+      drawTextFit(page, basic.intendFunction || "", 120, 724, 380, thaiFont, 6.2, black);
+      drawTextFit(page, basic.reporterName || "", 70, 712, 180, thaiFont, 6.2, black);
+
+      hazardRows.forEach(item => {
+        const pos = PDF_ITEM_POSITIONS[item.code];
+        if (!pos) return;
+
+        const col = PDF_COLUMNS[pos.side];
+
+        if (item.remark && item.remark.trim() !== "") {
+          drawTextFit(page, item.remark, col.remarkX + 2, pos.y - 2.6, col.remarkW - 4, thaiFont, 5.2, black);
+        }
+
+        if (Number(item.OP) === 1) drawTick(page, col.opX, pos.y, black);
+        if (Number(item.MT) === 1) drawTick(page, col.mtX, pos.y, black);
+        if (Number(item.OT) === 1) drawTick(page, col.otX, pos.y, black);
+      });
+
+      if (payload.image && payload.image.dataUrl) {
+        await drawAttachedImage(pdfDoc, page, payload.image.dataUrl);
+      }
+
+      const pdfBytes = await pdfDoc.save();
+      return uint8ArrayToDataUrl(pdfBytes, "application/pdf");
+    }
+
+    async function drawAttachedImage(pdfDoc, page, dataUrl) {
+      const bytes = dataUrlToUint8Array(dataUrl);
+      const isPng = dataUrl.toLowerCase().startsWith("data:image/png");
+      const img = isPng ? await pdfDoc.embedPng(bytes) : await pdfDoc.embedJpg(bytes);
+
+      const box = {
+        x: 56,
+        y: 85,
+        w: 217,
+        h: 106
+      };
+
+      const scale = Math.min(box.w / img.width, box.h / img.height);
+      const drawW = img.width * scale;
+      const drawH = img.height * scale;
+
+      page.drawImage(img, {
+        x: box.x + (box.w - drawW) / 2,
+        y: box.y + (box.h - drawH) / 2,
+        width: drawW,
+        height: drawH
+      });
+    }
+
+    function drawTextFit(page, value, x, y, maxWidth, font, size, color) {
+      let text = cleanPdfText(value);
+      if (!text) return;
+
+      while (font.widthOfTextAtSize(text, size) > maxWidth && text.length > 0) {
+        text = text.slice(0, -1);
+      }
+
+      if (cleanPdfText(value).length > text.length && text.length > 3) {
+        text = text.slice(0, -3) + "...";
+      }
+
+      page.drawText(text, {
+        x: x,
+        y: y,
+        size: size,
+        font: font,
+        color: color
+      });
+    }
+
+    function drawTick(page, cx, cy, color) {
+      page.drawLine({
+        start: { x: cx - 3.8, y: cy - 0.2 },
+        end: { x: cx - 1.2, y: cy - 3.2 },
+        thickness: 0.9,
+        color: color
+      });
+
+      page.drawLine({
+        start: { x: cx - 1.2, y: cy - 3.2 },
+        end: { x: cx + 4.2, y: cy + 4.0 },
+        thickness: 0.9,
+        color: color
+      });
+    }
+
+    function dataUrlToUint8Array(dataUrl) {
+      const base64 = dataUrl.split(",")[1];
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+
+      return bytes;
+    }
+
+    function uint8ArrayToDataUrl(bytes, mimeType) {
+      let binary = "";
+      const chunkSize = 0x8000;
+
+      for (let i = 0; i < bytes.length; i += chunkSize) {
+        const chunk = bytes.subarray(i, i + chunkSize);
+        binary += String.fromCharCode.apply(null, chunk);
+      }
+
+      return "data:" + mimeType + ";base64," + btoa(binary);
+    }
+
+    function cleanPdfText(value) {
+      return String(value || "")
+        .replace(/\r?\n|\r/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function buildPdfFileName(machineArea, saveDate) {
+      const safeMachine = safeFileNameClient(machineArea || "HIRA");
+      return safeMachine + "_" + saveDate + ".pdf";
+    }
+
+    function safeFileNameClient(value) {
+      return String(value || "")
+        .replace(/[\\/:*?"<>|#%{}~&]/g, "_")
+        .replace(/\s+/g, "_")
+        .trim()
+        .substring(0, 80);
+    }
+
+    function getTodayThaiDateText() {
+      const now = new Date();
+      const dd = String(now.getDate()).padStart(2, "0");
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const yyyy = now.getFullYear() + 543;
+      return dd + "-" + mm + "-" + yyyy;
     }
 
     function setSubmitLoading(isLoading) {
