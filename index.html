@@ -423,54 +423,78 @@
     .popup-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(0, 0, 0, 0.36);
       display: none;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       z-index: 9999;
-      padding: 20px;
+      padding: 18px 10px;
+      overflow: hidden;
     }
 
     .popup-overlay.show {
       display: flex;
     }
 
-    .popup-overlay.success-mode {
-      align-items: flex-start;
-      justify-content: center;
-      padding-top: 26px;
+    .popup-card {
+      width: min(96vw, 860px);
+      max-height: calc(100dvh - 36px);
+      background: #fff;
+      border-radius: 26px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.24);
+      animation: popupIn 0.22s ease-out;
+      overflow: hidden;
     }
 
-    .popup-card {
-      width: 100%;
-      max-width: 420px;
-      background: #fff;
-      border-radius: 28px;
+    .popup-card.simple-card {
+      width: min(92vw, 420px);
+      margin-top: 18vh;
       padding: 28px 24px;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.22);
-      animation: popupIn 0.22s ease-out;
     }
 
     .popup-card.success-card {
-      max-width: 900px;
-      padding: 16px;
-      border-radius: 30px;
+      margin-top: 8px;
       text-align: left;
-      background: #fffdf8;
+      padding: 16px;
     }
 
-    .popup-simple-content {
+    .popup-simple {
       display: block;
+      text-align: center;
     }
 
-    .success-card-content {
+    .popup-success {
       display: none;
+    }
+
+    .popup-card.success-card .popup-simple {
+      display: none;
+    }
+
+    .popup-card.success-card .popup-success {
+      display: block;
     }
 
     .popup-icon {
       font-size: 56px;
       margin-bottom: 12px;
+    }
+
+    .popup-error-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #e03131;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 14px;
     }
 
     .popup-title {
@@ -480,9 +504,9 @@
     }
 
     .popup-message {
-      font-size: 17px;
+      font-size: 18px;
       color: #555;
-      line-height: 1.5;
+      line-height: 1.45;
       white-space: pre-line;
     }
 
@@ -505,57 +529,44 @@
       border: 6px solid #e9ecef;
       border-top-color: #1f6feb;
       border-radius: 50%;
-      margin: 0 auto 16px;
+      margin: 0 auto 18px;
       animation: spin 0.8s linear infinite;
     }
 
-    .popup-x-icon {
-      width: 62px;
-      height: 62px;
-      border-radius: 50%;
-      background: #e53935;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 46px;
-      font-weight: 900;
-      line-height: 1;
-      margin: 0 auto 14px;
-      box-shadow: 0 8px 24px rgba(229, 57, 53, 0.28);
-    }
-
     .success-share-card {
-      background: linear-gradient(135deg, #fff8ee 0%, #ffffff 48%, #ecfff3 100%);
-      border: 1px solid #f1eadf;
-      border-radius: 26px;
-      padding: 22px;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
+      width: 100%;
+      background: linear-gradient(135deg, #fffdf8 0%, #ffffff 55%, #f4fff8 100%);
+      border: 1px solid #ebe6dc;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.7);
     }
 
-    .success-share-title {
+    .success-main-title {
       text-align: center;
-      font-size: clamp(24px, 4vw, 34px);
+      font-size: clamp(24px, 5vw, 44px);
       font-weight: 900;
-      color: #0b7a33;
-      margin-bottom: 18px;
-      letter-spacing: 0.2px;
+      color: #12833b;
+      line-height: 1.1;
+      margin: 0 0 12px;
     }
 
-    .success-share-body {
+    .success-landscape {
       display: grid;
-      grid-template-columns: minmax(190px, 0.9fr) minmax(260px, 1.25fr);
-      gap: 20px;
+      grid-template-columns: 44% 56%;
+      gap: 14px;
       align-items: stretch;
+      min-height: 260px;
     }
 
     .success-image-box {
       width: 100%;
-      min-height: 240px;
-      border-radius: 22px;
+      min-height: 230px;
+      max-height: min(48dvh, 360px);
+      border-radius: 20px;
       overflow: hidden;
-      background: #f4f6f8;
-      border: 1px solid #e6e6e6;
+      background: #f1f3f5;
+      border: 1px solid #e4e4e4;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -569,82 +580,171 @@
     }
 
     .success-no-image {
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: #777;
       font-size: 18px;
       font-weight: 800;
       text-align: center;
-      padding: 24px;
+      padding: 16px;
     }
 
     .success-info-box {
-      background: rgba(255, 255, 255, 0.82);
+      min-width: 0;
+      background: rgba(255,255,255,0.88);
       border: 1px solid #e8e8e8;
-      border-radius: 22px;
-      padding: 18px;
+      border-radius: 20px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    .success-info-heading {
-      font-size: 22px;
+    .success-info-title {
+      font-size: clamp(18px, 3.2vw, 28px);
       font-weight: 900;
       color: #111;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #f0f0f0;
+      margin-bottom: 8px;
+      border-bottom: 2px solid #efefef;
+      padding-bottom: 8px;
+    }
+
+    .success-info-list {
+      display: grid;
+      gap: 6px;
     }
 
     .success-info-row {
       display: grid;
-      grid-template-columns: 155px 1fr;
-      gap: 10px;
-      padding: 7px 0;
-      border-bottom: 1px dashed #e9e9e9;
-      font-size: 15px;
-      line-height: 1.4;
-    }
-
-    .success-info-row:last-child {
-      border-bottom: none;
+      grid-template-columns: minmax(88px, 40%) 1fr;
+      gap: 8px;
+      align-items: baseline;
+      border-bottom: 1px dashed #e6e6e6;
+      padding-bottom: 4px;
     }
 
     .success-info-label {
+      color: #666;
+      font-size: clamp(10px, 2.15vw, 15px);
       font-weight: 900;
-      color: #555;
-    }
-
-    .success-info-value {
-      font-weight: 800;
-      color: #111;
+      line-height: 1.25;
       word-break: break-word;
     }
 
-    .success-action-row {
+    .success-info-value {
+      color: #111;
+      font-size: clamp(11px, 2.35vw, 16px);
+      font-weight: 800;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .success-actions {
       display: flex;
       justify-content: center;
-      gap: 14px;
-      margin-top: 18px;
-      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 12px;
     }
 
     .success-action-btn {
-      min-height: 50px;
-      min-width: 140px;
+      min-height: 46px;
       border: none;
       border-radius: 999px;
-      padding: 10px 22px;
-      font-size: 17px;
+      padding: 10px 20px;
+      font-size: 16px;
       font-weight: 900;
       cursor: pointer;
+      white-space: nowrap;
     }
 
-    .success-action-btn.close {
+    .success-close-btn {
       background: #f1f3f5;
       color: #111;
+      border: 1px solid #d9d9d9;
     }
 
-    .success-action-btn.line {
+    .line-share-btn {
       background: #06c755;
       color: #fff;
-      box-shadow: 0 8px 20px rgba(6, 199, 85, 0.25);
+      box-shadow: 0 6px 14px rgba(6,199,85,0.25);
+    }
+
+    @media (max-width: 480px) {
+      .popup-overlay {
+        padding: 10px 6px;
+      }
+
+      .popup-card.success-card {
+        width: 98vw;
+        padding: 9px;
+        border-radius: 20px;
+      }
+
+      .success-share-card {
+        border-radius: 18px;
+        padding: 10px;
+      }
+
+      .success-main-title {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+
+      .success-landscape {
+        grid-template-columns: 42% 58%;
+        gap: 8px;
+        min-height: 198px;
+      }
+
+      .success-image-box {
+        min-height: 194px;
+        max-height: 42dvh;
+        border-radius: 14px;
+      }
+
+      .success-info-box {
+        border-radius: 14px;
+        padding: 9px 10px;
+      }
+
+      .success-info-title {
+        font-size: 18px;
+        margin-bottom: 6px;
+        padding-bottom: 6px;
+      }
+
+      .success-info-list {
+        gap: 3px;
+      }
+
+      .success-info-row {
+        grid-template-columns: minmax(72px, 42%) 1fr;
+        gap: 5px;
+        padding-bottom: 2px;
+      }
+
+      .success-info-label {
+        font-size: 10px;
+      }
+
+      .success-info-value {
+        font-size: 11px;
+      }
+
+      .success-actions {
+        padding-top: 8px;
+        gap: 8px;
+      }
+
+      .success-action-btn {
+        min-height: 40px;
+        padding: 8px 14px;
+        font-size: 14px;
+      }
     }
 
     @keyframes popupIn {
@@ -655,36 +755,6 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-
-    @media (max-width: 720px) {
-      .popup-overlay.success-mode {
-        padding-top: 14px;
-        align-items: flex-start;
-      }
-
-      .popup-card.success-card {
-        max-width: 100%;
-        padding: 12px;
-      }
-
-      .success-share-card {
-        padding: 16px;
-      }
-
-      .success-share-body {
-        grid-template-columns: 1fr;
-      }
-
-      .success-image-box {
-        min-height: 190px;
-      }
-
-      .success-info-row {
-        grid-template-columns: 1fr;
-        gap: 2px;
-      }
-    }
-
 
     .main-btn:active,
     .nav-btn:active,
@@ -793,8 +863,8 @@
   </div>
 
   <div id="cutePopup" class="popup-overlay">
-    <div id="popupCard" class="popup-card">
-      <div id="popupSimpleContent" class="popup-simple-content">
+    <div id="popupCard" class="popup-card simple-card">
+      <div id="popupSimple" class="popup-simple">
         <div id="popupIcon" class="popup-icon">🌸</div>
         <div id="popupTitle" class="popup-title">แจ้งเตือน</div>
         <div id="popupMessage" class="popup-message"></div>
@@ -803,23 +873,63 @@
         </button>
       </div>
 
-      <div id="popupSuccessContent" class="success-card-content">
+      <div id="popupSuccess" class="popup-success">
         <div id="successShareCard" class="success-share-card">
-          <div class="success-share-title">บันทึกสำเร็จ</div>
-          <div class="success-share-body">
-            <div id="successImageBox" class="success-image-box"></div>
+          <div class="success-main-title">บันทึกสำเร็จ</div>
+
+          <div class="success-landscape">
+            <div id="successImageBox" class="success-image-box">
+              <div class="success-no-image">ไม่มีรูปภาพแนบ</div>
+            </div>
+
             <div class="success-info-box">
-              <div class="success-info-heading">ข้อมูลหัวกระดาษ</div>
-              <div id="successInfoRows"></div>
+              <div class="success-info-title">ข้อมูลหัวกระดาษ</div>
+
+              <div class="success-info-list">
+                <div class="success-info-row">
+                  <div class="success-info-label">วันที่บันทึก</div>
+                  <div id="successDate" class="success-info-value">-</div>
+                </div>
+
+                <div class="success-info-row">
+                  <div class="success-info-label">MACHINE / พื้นที่</div>
+                  <div id="successMachineArea" class="success-info-value">-</div>
+                </div>
+
+                <div class="success-info-row">
+                  <div class="success-info-label">MODEL</div>
+                  <div id="successModel" class="success-info-value">-</div>
+                </div>
+
+                <div class="success-info-row">
+                  <div class="success-info-label">PLANT</div>
+                  <div id="successPlant" class="success-info-value">-</div>
+                </div>
+
+                <div class="success-info-row">
+                  <div class="success-info-label">SERIAL NO.</div>
+                  <div id="successSerialNo" class="success-info-value">-</div>
+                </div>
+
+                <div class="success-info-row">
+                  <div class="success-info-label">INTEND FUCTION</div>
+                  <div id="successIntendFunction" class="success-info-value">-</div>
+                </div>
+
+                <div class="success-info-row">
+                  <div class="success-info-label">ชื่อผู้รายงาน</div>
+                  <div id="successReporterName" class="success-info-value">-</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="success-action-row">
-          <button class="success-action-btn close" type="button" onclick="closeSuccessPopup()">
+        <div class="success-actions">
+          <button class="success-action-btn success-close-btn" type="button" onclick="hideCutePopup()">
             ปิด
           </button>
-          <button id="lineShareBtn" class="success-action-btn line" type="button" onclick="shareSuccessCardToLine()">
+          <button class="success-action-btn line-share-btn" type="button" onclick="shareSuccessCardToLine()">
             แชร์ไปที่ LINE
           </button>
         </div>
@@ -1104,7 +1214,7 @@ const PDF_HEADER_FIELDS = {
     }
 
     function openSavedData() {
-      showCutePopup("info", "ข้อมูลที่บันทึก", "เมนูนี้จะพัฒนาต่อในขั้นตอนถัดไปค่ะ");
+      alert("เมนูข้อมูลที่บันทึก จะทำในขั้นตอนถัดไป");
     }
 
     function renderCurrentPage() {
@@ -1431,7 +1541,7 @@ const PDF_HEADER_FIELDS = {
       if (!file) return;
 
       if (!file.type.startsWith("image/")) {
-        showCutePopup("error", "ไฟล์ไม่ถูกต้อง", "กรุณาเลือกไฟล์รูปภาพเท่านั้นค่ะ");
+        alert("กรุณาเลือกไฟล์รูปภาพเท่านั้น");
         event.target.value = "";
         return;
       }
@@ -1445,7 +1555,7 @@ const PDF_HEADER_FIELDS = {
 
         renderBasicPage();
       } catch (error) {
-        showCutePopup("error", "แนบรูปไม่สำเร็จ", "กรุณาลองเลือกรูปใหม่อีกครั้งค่ะ");
+        alert("ไม่สามารถแนบรูปได้ กรุณาลองใหม่อีกครั้ง");
         console.error(error);
       }
 
@@ -1493,7 +1603,6 @@ const PDF_HEADER_FIELDS = {
       if (isSubmitting) return;
 
       if (!WEB_APP_URL || WEB_APP_URL.includes("ใส่_WEB_APP_URL")) {
-        console.error("ยังไม่ได้ตั้งค่า Web App URL");
         showCutePopup("error");
         return;
       }
@@ -1526,7 +1635,7 @@ const PDF_HEADER_FIELDS = {
           body: JSON.stringify(payload)
         });
 
-        showCutePopup("success", payload);
+        showCutePopup("success", "", "", { payload: payload });
 
       } catch (error) {
         console.error(error);
@@ -1772,113 +1881,89 @@ const PDF_HEADER_FIELDS = {
       }
     }
 
-    function showCutePopup(type, titleOrPayload, message) {
+    function showCutePopup(type, title, message, options = {}) {
       const popup = document.getElementById("cutePopup");
       const card = document.getElementById("popupCard");
-      const simpleContent = document.getElementById("popupSimpleContent");
-      const successContent = document.getElementById("popupSuccessContent");
       const icon = document.getElementById("popupIcon");
       const titleEl = document.getElementById("popupTitle");
       const messageEl = document.getElementById("popupMessage");
       const closeBtn = document.getElementById("popupCloseBtn");
-      const payload = typeof titleOrPayload === "object" && titleOrPayload !== null ? titleOrPayload : null;
-      const customTitle = typeof titleOrPayload === "string" ? titleOrPayload : "";
-      const customMessage = typeof message === "string" ? message : "";
 
-      if (!popup || !card || !simpleContent || !successContent || !icon || !titleEl || !messageEl || !closeBtn) {
-        if (type === "success") alert("บันทึกสำเร็จ");
-        else if (type === "loading") alert("กรุณารอสักครู่ กำลังบันทึกข้อมูล");
-        else alert(customTitle || "บันทึกข้อมูลไม่สำเร็จ");
+      if (!popup || !card || !icon || !titleEl || !messageEl || !closeBtn) {
+        alert(type === "error" ? "บันทึกข้อมูลไม่สำเร็จ" : "กรุณารอสักครู่ กำลังบันทึกข้อมูล");
         return;
       }
 
-      popup.classList.remove("success-mode");
-      card.classList.remove("success-card");
-      simpleContent.style.display = "block";
-      successContent.style.display = "none";
-      closeBtn.style.display = "inline-block";
+      popup.dataset.clearOnClose = "0";
+      card.className = "popup-card simple-card";
+      icon.className = "popup-icon";
 
       if (type === "loading") {
         icon.innerHTML = `<div class="popup-spinner"></div>`;
-        titleEl.textContent = "กรุณารอสักครู่ กำลังบันทึกข้อมูล";
-        messageEl.textContent = "";
+        titleEl.textContent = "กรุณารอสักครู่";
+        messageEl.textContent = "กำลังบันทึกข้อมูล";
         closeBtn.style.display = "none";
       } else if (type === "success") {
-        popup.classList.add("success-mode");
-        card.classList.add("success-card");
-        simpleContent.style.display = "none";
-        successContent.style.display = "block";
-        renderSuccessCard(payload || buildPayload());
-      } else if (type === "info") {
-        icon.textContent = "🌸";
-        titleEl.textContent = customTitle || "แจ้งเตือน";
-        messageEl.textContent = customMessage || "";
-        closeBtn.style.display = "inline-block";
+        card.className = "popup-card success-card";
+        popup.dataset.clearOnClose = "1";
+        populateSuccessPopup(options.payload || buildPayload());
       } else {
-        icon.innerHTML = `<div class="popup-x-icon">×</div>`;
-        titleEl.textContent = customTitle || "บันทึกข้อมูลไม่สำเร็จ";
-        messageEl.textContent = customMessage || "";
+        icon.innerHTML = `<div class="popup-error-icon">×</div>`;
+        titleEl.textContent = "บันทึกข้อมูลไม่สำเร็จ";
+        messageEl.textContent = "";
         closeBtn.style.display = "inline-block";
       }
 
       popup.classList.add("show");
     }
 
-    function renderSuccessCard(payload) {
+    function populateSuccessPopup(payload) {
+      const basic = payload && payload.basicInfo ? payload.basicInfo : {};
+      const image = payload && payload.image ? payload.image : {};
+      const saveDate = payload && payload.saveDate ? payload.saveDate : getTodayThaiDateText();
+
+      setTextContent("successDate", saveDate || "-");
+      setTextContent("successMachineArea", basic.machineArea || "-");
+      setTextContent("successModel", basic.model || "-");
+      setTextContent("successPlant", basic.plant || "-");
+      setTextContent("successSerialNo", basic.serialNo || "-");
+      setTextContent("successIntendFunction", basic.intendFunction || "-");
+      setTextContent("successReporterName", basic.reporterName || "-");
+
       const imageBox = document.getElementById("successImageBox");
-      const infoRows = document.getElementById("successInfoRows");
-      const basic = payload.basicInfo || {};
-      const saveDate = payload.saveDate || getTodayThaiDateText();
+      if (!imageBox) return;
 
-      if (imageBox) {
-        if (payload.image && payload.image.dataUrl) {
-          imageBox.innerHTML = `<img src="${payload.image.dataUrl}" alt="รูปภาพที่แนบ" />`;
-        } else {
-          imageBox.innerHTML = `<div class="success-no-image">ไม่มีรูปภาพแนบ</div>`;
-        }
+      if (image.dataUrl) {
+        imageBox.innerHTML = `<img src="${image.dataUrl}" alt="รูปที่แนบ" />`;
+      } else {
+        imageBox.innerHTML = `<div class="success-no-image">ไม่มีรูปภาพแนบ</div>`;
       }
+    }
 
-      if (infoRows) {
-        const rows = [
-          ["วันที่บันทึก", saveDate],
-          ["MACHINE / พื้นที่", basic.machineArea || "-"],
-          ["MODEL", basic.model || "-"],
-          ["PLANT", basic.plant || "-"],
-          ["SERIAL NO.", basic.serialNo || "-"],
-          ["INTEND FUCTION", basic.intendFunction || "-"],
-          ["ชื่อผู้รายงาน", basic.reporterName || "-"]
-        ];
-
-        infoRows.innerHTML = rows.map(row => `
-          <div class="success-info-row">
-            <div class="success-info-label">${escapeHtml(row[0])}</div>
-            <div class="success-info-value">${escapeHtml(row[1])}</div>
-          </div>
-        `).join("");
+    function setTextContent(id, value) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = value;
       }
-
-      const lineBtn = document.getElementById("lineShareBtn");
-      if (lineBtn) lineBtn.textContent = "แชร์ไปที่ LINE";
     }
 
     async function shareSuccessCardToLine() {
       const card = document.getElementById("successShareCard");
-      const lineBtn = document.getElementById("lineShareBtn");
-      if (!card || !lineBtn) return;
 
-      const originalText = lineBtn.textContent;
+      if (!card) {
+        showCutePopup("error");
+        return;
+      }
+
+      if (!window.html2canvas) {
+        showCutePopup("error");
+        return;
+      }
 
       try {
-        lineBtn.disabled = true;
-        lineBtn.textContent = "กำลังเตรียมภาพ...";
-
-        if (!window.html2canvas) {
-          throw new Error("ไม่พบ html2canvas");
-        }
-
         const canvas = await html2canvas(card, {
-          scale: 2,
           backgroundColor: "#ffffff",
+          scale: Math.min(3, window.devicePixelRatio || 2),
           useCORS: true
         });
 
@@ -1887,50 +1972,49 @@ const PDF_HEADER_FIELDS = {
         });
 
         if (!blob) {
-          throw new Error("ไม่สามารถสร้างภาพ PNG ได้");
+          throw new Error("Cannot create PNG");
         }
 
-        const fileName = "HIRA_บันทึกสำเร็จ_" + getTodayThaiDateText() + ".png";
-        const file = new File([blob], fileName, { type: "image/png" });
+        const file = new File([blob], "HIRA_success.png", { type: "image/png" });
 
-        if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({
             files: [file],
-            title: "บันทึกสำเร็จ",
+            title: "HIRA Online Form",
             text: "บันทึกสำเร็จ"
           });
-          lineBtn.textContent = originalText;
-        } else {
-          lineBtn.textContent = "อุปกรณ์นี้ไม่รองรับแชร์ภาพ";
-          setTimeout(() => {
-            lineBtn.textContent = originalText;
-          }, 2200);
+          return;
         }
+
+        if (navigator.share) {
+          await navigator.share({
+            title: "HIRA Online Form",
+            text: "บันทึกสำเร็จ"
+          });
+          return;
+        }
+
+        showCutePopup("error");
+
       } catch (error) {
         console.error(error);
-        lineBtn.textContent = "แชร์ภาพไม่สำเร็จ";
-        setTimeout(() => {
-          lineBtn.textContent = originalText;
-        }, 2200);
-      } finally {
-        lineBtn.disabled = false;
+        showCutePopup("error");
       }
     }
 
     function hideCutePopup() {
       const popup = document.getElementById("cutePopup");
-      const card = document.getElementById("popupCard");
-      if (popup) {
-        popup.classList.remove("show", "success-mode");
-      }
-      if (card) {
-        card.classList.remove("success-card");
-      }
-    }
+      if (!popup) return;
 
-    function closeSuccessPopup() {
-      hideCutePopup();
-      goHomeAndClear();
+      const shouldClear = popup.dataset.clearOnClose === "1";
+      popup.dataset.clearOnClose = "0";
+      popup.classList.remove("show");
+
+      if (shouldClear) {
+        setTimeout(() => {
+          goHomeAndClear();
+        }, 120);
+      }
     }
 
     function goHomeAndClear() {
