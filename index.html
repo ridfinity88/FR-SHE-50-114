@@ -1296,9 +1296,7 @@ const PDF_HEADER_FIELDS = {
         setSubmitLoading(true);
 
         showCutePopup(
-          "loading",
-          "กำลังสร้าง PDF",
-          "ระบบกำลังนำข้อมูลไปเติมใน PDF แม่แบบ กรุณารอสักครู่ค่ะ"
+          "ระบบกำลังบันทึกข้อมูล"
         );
 
         const pdfDataUrl = await generateFilledPdfDataUrl(payload);
@@ -1310,9 +1308,7 @@ const PDF_HEADER_FIELDS = {
         };
 
         showCutePopup(
-          "loading",
-          "กำลังบันทึกข้อมูล",
-          "ระบบกำลังส่งข้อมูลไปยัง Google Sheet และบันทึก PDF / รูปภาพไปยัง Google Drive ค่ะ"
+          "กรุณารอสักครู่ค่ะ"
         );
 
         await fetch(WEB_APP_URL, {
@@ -1325,9 +1321,7 @@ const PDF_HEADER_FIELDS = {
         });
 
         showCutePopup(
-          "success",
-          "บันทึกสำเร็จ",
-          "ส่งข้อมูลไปยัง Google Sheet แล้วค่ะ\nสร้าง PDF และบันทึกไปยัง Google Drive เรียบร้อยแล้ว"
+          "บันทึกสำเร็จ"
         );
 
         setTimeout(() => {
