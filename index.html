@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HIRA Online Form</title>
+  <title>Hazard Form</title>
 
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
@@ -1209,7 +1209,7 @@
 
     <section id="homeScreen" class="screen home-screen active">
       <div class="home-card">
-        <div class="home-title">HIRA Online System</div>
+        <div class="home-title">Hazard System</div>
         <div class="home-subtitle">เลือกเมนูที่ต้องการใช้งาน</div>
 
         <div class="home-buttons">
@@ -1251,7 +1251,7 @@
         <div class="saved-header">
           <div>
             <h1 class="saved-title">ข้อมูลที่บันทึก</h1>
-            <div class="saved-subtitle">แสดงไฟล์ PDF ล่าสุด 20 ไฟล์จาก Google Drive</div>
+            <div class="saved-subtitle">ไฟล์ PDF ล่าสุด 20 ไฟล์</div>
           </div>
 
           <div class="saved-header-actions">
@@ -1704,7 +1704,7 @@ const PDF_HEADER_FIELDS = {
         renderBasicNav();
       }
 
-      if (currentPage === "hazardMenu") {
+      if (currentPage === "Hazard Menu") {
         formTitle.textContent = "เลือกหัวข้อ Hazard";
         renderHazardMenuPage();
         renderHazardMenuNav();
