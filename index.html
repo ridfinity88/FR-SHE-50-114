@@ -755,6 +755,174 @@
 
 
 
+
+
+    .saved-screen {
+      align-items: center;
+      justify-content: center;
+    }
+
+    .saved-card {
+      width: 100%;
+      max-width: 980px;
+      min-height: 620px;
+      background: #fff;
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: 0 14px 44px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .saved-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .saved-title {
+      font-size: clamp(24px, 5vw, 36px);
+      font-weight: 900;
+      margin: 0;
+    }
+
+    .saved-subtitle {
+      font-size: 16px;
+      color: #666;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .saved-header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .saved-refresh-btn,
+    .saved-back-btn {
+      min-height: 46px;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .saved-refresh-btn {
+      background: #111;
+      color: #fff;
+    }
+
+    .saved-back-btn {
+      background: #f1f3f5;
+      color: #111;
+    }
+
+    .saved-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .saved-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      border: 1px solid #e6e6e6;
+      border-radius: 18px;
+      padding: 14px;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .saved-file-info {
+      min-width: 0;
+    }
+
+    .saved-file-name {
+      font-size: clamp(15px, 3vw, 18px);
+      font-weight: 900;
+      color: #111;
+      overflow-wrap: anywhere;
+      line-height: 1.45;
+    }
+
+    .saved-file-meta {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #777;
+    }
+
+    .saved-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+
+    .saved-action-btn {
+      min-height: 42px;
+      border: none;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .saved-view-btn {
+      background: #1f6feb;
+      color: #fff;
+    }
+
+    .saved-download-btn {
+      background: #0b7a33;
+      color: #fff;
+    }
+
+    .saved-status {
+      flex: 1;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 12px;
+      color: #666;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .saved-status-icon {
+      font-size: 46px;
+    }
+
+    .saved-mini-spinner {
+      width: 46px;
+      height: 46px;
+      border: 5px solid #e9ecef;
+      border-top-color: #1f6feb;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
     .admin-screen {
       align-items: center;
       justify-content: center;
@@ -1012,6 +1180,26 @@
       .nav-btn { min-height: 56px; }
       .hazard-btn { min-height: 62px; }
       .upload-box { min-height: 180px; }
+
+      .saved-card {
+        min-height: calc(100dvh - 24px);
+        padding: 16px;
+        border-radius: 22px;
+      }
+
+      .saved-item {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .saved-actions {
+        justify-content: stretch;
+      }
+
+      .saved-action-btn {
+        flex: 1;
+      }
+
     }
   </style>
 </head>
@@ -1054,6 +1242,35 @@
       </main>
 
       <div id="navBar" class="nav-bar"></div>
+    </section>
+
+
+
+    <section id="savedScreen" class="screen saved-screen">
+      <div class="saved-card">
+        <div class="saved-header">
+          <div>
+            <h1 class="saved-title">ข้อมูลที่บันทึก</h1>
+            <div class="saved-subtitle">แสดงไฟล์ PDF ล่าสุด 20 ไฟล์จาก Google Drive</div>
+          </div>
+
+          <div class="saved-header-actions">
+            <button class="saved-refresh-btn" type="button" onclick="loadSavedPdfFiles()">
+              รีเฟรช
+            </button>
+            <button class="saved-back-btn" type="button" onclick="goHomeAndClear()">
+              กลับหน้าแรก
+            </button>
+          </div>
+        </div>
+
+        <div id="savedListContainer" class="saved-list">
+          <div class="saved-status">
+            <div class="saved-status-icon">📄</div>
+            <div>กดรีเฟรชเพื่อโหลดข้อมูล PDF ล่าสุด</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="adminScreen" class="screen admin-screen">
@@ -1188,7 +1405,7 @@
   </div>
 
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyA518wxpV-jy8whTaMyHyP6Cw4zAkkKWfKaRzI--scjFVzSYUxaq20t7blM27b9zIR/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyu5NoXUgFVY_B716WE6DExh5aXjxgkWc9jlA6_bdhyNLVSzWiO7knpRXYPhdx3bB2d/exec";
     const ADMIN_SHEET_URL = "https://docs.google.com/spreadsheets/d/1wRIC1nNoyEQzAz6kWRHZgJMxtXZP8TdSSudz2EZx-RM/edit?usp=sharing";
     const ADMIN_DRIVE_URL = "https://drive.google.com/drive/folders/1-KEGrSNVJPkr9xcs4oWF6fQZXEIxaanx?usp=sharing";
 
@@ -1200,6 +1417,7 @@
     let isSubmitting = false;
     let isCheckingAdminPassword = false;
     let isAdminPasswordVisible = false;
+    let isLoadingSavedFiles = false;
 
     const hazardCategories = [
       {
@@ -1436,6 +1654,8 @@ const PDF_HEADER_FIELDS = {
     const navBar = document.getElementById("navBar");
     const formTitle = document.getElementById("formTitle");
     const adminScreen = document.getElementById("adminScreen");
+    const savedScreen = document.getElementById("savedScreen");
+    const savedListContainer = document.getElementById("savedListContainer");
 
     initializeHazardData();
 
@@ -1458,10 +1678,12 @@ const PDF_HEADER_FIELDS = {
       homeScreen.classList.remove("active");
       formScreen.classList.remove("active");
       if (adminScreen) adminScreen.classList.remove("active");
+      if (savedScreen) savedScreen.classList.remove("active");
 
       if (screenName === "home") homeScreen.classList.add("active");
       if (screenName === "form") formScreen.classList.add("active");
       if (screenName === "admin" && adminScreen) adminScreen.classList.add("active");
+      if (screenName === "saved" && savedScreen) savedScreen.classList.add("active");
     }
 
     function openForm() {
@@ -1471,7 +1693,8 @@ const PDF_HEADER_FIELDS = {
     }
 
     function openSavedData() {
-      alert("เมนูข้อมูลที่บันทึก จะทำในขั้นตอนถัดไป");
+      showScreen("saved");
+      loadSavedPdfFiles();
     }
 
     function renderCurrentPage() {
@@ -1865,8 +2088,10 @@ const PDF_HEADER_FIELDS = {
       }
 
       const saveDate = getTodayThaiDateText();
+      const fileDate = getTodayThaiShortDateText();
       const payload = buildPayload();
       payload.saveDate = saveDate;
+      payload.fileDate = fileDate;
       payload.submissionId = "HIRA_" + Date.now() + "_" + Math.random().toString(36).slice(2);
 
       try {
@@ -1876,7 +2101,7 @@ const PDF_HEADER_FIELDS = {
         showCutePopup("loading");
 
         const pdfDataUrl = await generateFilledPdfDataUrl(payload);
-        const pdfName = buildPdfFileName(payload.basicInfo.machineArea, saveDate);
+        const pdfName = buildPdfFileName(payload.basicInfo.machineArea, fileDate);
 
         payload.generatedPdf = {
           name: pdfName,
@@ -2126,6 +2351,14 @@ const PDF_HEADER_FIELDS = {
       return dd + "-" + mm + "-" + yyyy;
     }
 
+    function getTodayThaiShortDateText() {
+      const now = new Date();
+      const dd = String(now.getDate()).padStart(2, "0");
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const yy = String((now.getFullYear() + 543) % 100).padStart(2, "0");
+      return dd + "-" + mm + "-" + yy;
+    }
+
     function setSubmitLoading(isLoading) {
       const buttons = navBar.querySelectorAll("button");
       buttons.forEach(btn => {
@@ -2260,6 +2493,155 @@ const PDF_HEADER_FIELDS = {
     }
 
 
+
+
+
+    async function loadSavedPdfFiles() {
+      if (isLoadingSavedFiles) return;
+
+      if (!WEB_APP_URL || WEB_APP_URL.includes("ใส่_WEB_APP_URL")) {
+        renderSavedFilesError("ยังไม่ได้ตั้งค่า Web App URL");
+        return;
+      }
+
+      try {
+        isLoadingSavedFiles = true;
+        renderSavedFilesLoading();
+
+        const result = await fetchSavedPdfFilesFromDrive();
+
+        if (!result || !result.success) {
+          throw new Error(result && result.message ? result.message : "โหลดข้อมูลไม่สำเร็จ");
+        }
+
+        renderSavedFiles(result.files || []);
+      } catch (error) {
+        console.error(error);
+        renderSavedFilesError("ไม่สามารถโหลดรายการ PDF ได้\n" + error.message);
+      } finally {
+        isLoadingSavedFiles = false;
+      }
+    }
+
+    function renderSavedFilesLoading() {
+      if (!savedListContainer) return;
+
+      savedListContainer.innerHTML = `
+        <div class="saved-status">
+          <div class="saved-mini-spinner"></div>
+          <div>กำลังโหลดไฟล์ PDF ล่าสุด...</div>
+        </div>
+      `;
+    }
+
+    function renderSavedFilesError(message) {
+      if (!savedListContainer) return;
+
+      savedListContainer.innerHTML = `
+        <div class="saved-status">
+          <div class="saved-status-icon">❌</div>
+          <div>${escapeHtml(message || "โหลดข้อมูลไม่สำเร็จ")}</div>
+        </div>
+      `;
+    }
+
+    function renderSavedFiles(files) {
+      if (!savedListContainer) return;
+
+      if (!files || files.length === 0) {
+        savedListContainer.innerHTML = `
+          <div class="saved-status">
+            <div class="saved-status-icon">📭</div>
+            <div>ยังไม่พบไฟล์ PDF ใน Google Drive</div>
+          </div>
+        `;
+        return;
+      }
+
+      savedListContainer.innerHTML = files.map((file, index) => `
+        <div class="saved-item">
+          <div class="saved-file-info">
+            <div class="saved-file-name">${index + 1}. ${escapeHtml(file.name || "Untitled PDF")}</div>
+            <div class="saved-file-meta">วันที่สร้าง: ${escapeHtml(file.createdText || "-")}</div>
+          </div>
+
+          <div class="saved-actions">
+            <button class="saved-action-btn saved-view-btn" type="button" onclick="openSavedPdf('${escapeJs(file.viewUrl || "")}')">
+              👁️ ดูข้อมูล
+            </button>
+            <button class="saved-action-btn saved-download-btn" type="button" onclick="downloadSavedPdf('${escapeJs(file.downloadUrl || "")}')">
+              ⬇️ Download PDF
+            </button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function fetchSavedPdfFilesFromDrive() {
+      return new Promise((resolve, reject) => {
+        const callbackName = "__hiraPdfListCallback_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+        const script = document.createElement("script");
+        const timeoutMs = 30000;
+        let finished = false;
+
+        function cleanup() {
+          finished = true;
+          clearTimeout(timer);
+          if (script.parentNode) script.parentNode.removeChild(script);
+          try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+        }
+
+        const timer = setTimeout(() => {
+          if (finished) return;
+          cleanup();
+          reject(new Error("โหลดรายการ PDF เกินเวลาที่กำหนด"));
+        }, timeoutMs);
+
+        window[callbackName] = function(response) {
+          if (finished) return;
+          cleanup();
+          resolve(response);
+        };
+
+        script.onerror = function() {
+          if (finished) return;
+          cleanup();
+          reject(new Error("ไม่สามารถเชื่อมต่อ Apps Script ได้"));
+        };
+
+        script.src = WEB_APP_URL
+          + "?action=listPdfFiles"
+          + "&limit=20"
+          + "&callback=" + encodeURIComponent(callbackName)
+          + "&_=" + Date.now();
+
+        document.body.appendChild(script);
+      });
+    }
+
+    function openSavedPdf(url) {
+      if (!url) {
+        showCutePopup("error");
+        return;
+      }
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    function downloadSavedPdf(url) {
+      if (!url) {
+        showCutePopup("error");
+        return;
+      }
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    function escapeJs(value) {
+      return String(value || "")
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'")
+        .replace(/\n/g, "\\n")
+        .replace(/\r/g, "");
+    }
 
     function openAdminPasswordPopup() {
       const popup = document.getElementById("adminPasswordPopup");
