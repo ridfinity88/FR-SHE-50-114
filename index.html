@@ -812,6 +812,16 @@
       "11.7": { side: "right", y: 221.1 }
     };
 
+const PDF_HEADER_FIELDS = {
+  date:            { x: 408, y: 765, w: 92,  size: 6.3 },
+  machineArea:     { x: 104, y: 751, w: 215, size: 6.3 },
+  model:           { x: 408, y: 751, w: 120, size: 6.3 },
+  plant:           { x: 52,  y: 739, w: 120, size: 6.3 },
+  serialNo:        { x: 408, y: 739, w: 120, size: 6.3 },
+  intendFunction:  { x: 136, y: 727, w: 370, size: 6.1 },
+  reporterName:    { x: 84,  y: 715, w: 180, size: 6.1 }
+};
+    
     const PDF_COLUMNS = {
       left: {
         remarkX: 173,
@@ -1358,70 +1368,95 @@
     }
 
     async function generateFilledPdfDataUrl(payload) {
-      if (!window.PDFLib) {
-        throw new Error("ไม่พบ pdf-lib กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต");
-      }
+  if (!window.PDFLib) {
+    throw new Error("ไม่พบ pdf-lib กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต");
+  }
 
-      if (!window.fontkit) {
-        throw new Error("ไม่พบ fontkit กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต");
-      }
+  if (!window.fontkit) {
+    throw new Error("ไม่พบ fontkit กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต");
+  }
 
-      const { PDFDocument, rgb } = PDFLib;
+  const { PDFDocument, rgb } = PDFLib;
 
-      const templateResponse = await fetch(PDF_TEMPLATE_URL);
-      if (!templateResponse.ok) {
-        throw new Error("ไม่พบไฟล์ PDF แม่แบบใน GitHub: " + PDF_TEMPLATE_URL);
-      }
+  const templateResponse = await fetch(PDF_TEMPLATE_URL);
+  if (!templateResponse.ok) {
+    throw new Error("ไม่พบไฟล์ PDF แม่แบบใน GitHub: " + PDF_TEMPLATE_URL);
+  }
 
-      const fontResponse = await fetch(THAI_FONT_URL);
-      if (!fontResponse.ok) {
-        throw new Error("ไม่พบไฟล์ฟอนต์ภาษาไทยใน GitHub: " + THAI_FONT_URL);
-      }
+  const fontResponse = await fetch(THAI_FONT_URL);
+  if (!fontResponse.ok) {
+    throw new Error("ไม่พบไฟล์ฟอนต์ภาษาไทยใน GitHub: " + THAI_FONT_URL);
+  }
 
-      const templateBytes = await templateResponse.arrayBuffer();
-      const fontBytes = await fontResponse.arrayBuffer();
+  const templateBytes = await templateResponse.arrayBuffer();
+  const fontBytes = await fontResponse.arrayBuffer();
 
-      const pdfDoc = await PDFDocument.load(templateBytes);
-      pdfDoc.registerFontkit(fontkit);
+  const pdfDoc = await PDFDocument.load(templateBytes);
+  pdfDoc.registerFontkit(fontkit);
 
-      const thaiFont = await pdfDoc.embedFont(fontBytes, { subset: true });
-      const page = pdfDoc.getPages()[0];
+  const thaiFont = await pdfDoc.embedFont(fontBytes, { subset: true });
+  const page = pdfDoc.getPages()[0];
 
-      const black = rgb(0, 0, 0);
-      const basic = payload.basicInfo || {};
-      const hazardRows = payload.hazardRows || [];
-      const saveDate = payload.saveDate || getTodayThaiDateText();
+  const black = rgb(0, 0, 0);
+  const basic = payload.basicInfo || {};
+  const hazardRows = payload.hazardRows || [];
+  const saveDate = payload.saveDate || getTodayThaiDateText();
 
-      drawTextFit(page, saveDate, 382, 760, 110, thaiFont, 6.2, black);
-      drawTextFit(page, basic.machineArea || "", 75, 748, 160, thaiFont, 6.2, black);
-      drawTextFit(page, basic.model || "", 365, 748, 150, thaiFont, 6.2, black);
-      drawTextFit(page, basic.plant || "", 55, 736, 170, thaiFont, 6.2, black);
-      drawTextFit(page, basic.serialNo || "", 370, 736, 145, thaiFont, 6.2, black);
-      drawTextFit(page, basic.intendFunction || "", 120, 724, 380, thaiFont, 6.2, black);
-      drawTextFit(page, basic.reporterName || "", 70, 712, 180, thaiFont, 6.2, black);
+  // ====== ส่วนหัวกระดาษ (แก้เฉพาะจุดนี้) ======
+  drawHeaderField(page, saveDate,                   PDF_HEADER_FIELDS.date,           thaiFont, black);
+  drawHeaderField(page, basic.machineArea || "",   PDF_HEADER_FIELDS.machineArea,    thaiFont, black);
+  drawHeaderField(page, basic.model || "",         PDF_HEADER_FIELDS.model,          thaiFont, black);
+  drawHeaderField(page, basic.plant || "",         PDF_HEADER_FIELDS.plant,          thaiFont, black);
+  drawHeaderField(page, basic.serialNo || "",      PDF_HEADER_FIELDS.serialNo,       thaiFont, black);
+  drawHeaderField(page, basic.intendFunction || "",PDF_HEADER_FIELDS.intendFunction, thaiFont, black);
+  drawHeaderField(page, basic.reporterName || "",  PDF_HEADER_FIELDS.reporterName,   thaiFont, black);
 
-      hazardRows.forEach(item => {
-        const pos = PDF_ITEM_POSITIONS[item.code];
-        if (!pos) return;
+  // ====== รายการ Hazard (คงเดิมทั้งหมด) ======
+  hazardRows.forEach(item => {
+    const pos = PDF_ITEM_POSITIONS[item.code];
+    if (!pos) return;
 
-        const col = PDF_COLUMNS[pos.side];
+    const col = PDF_COLUMNS[pos.side];
 
-        if (item.remark && item.remark.trim() !== "") {
-          drawTextFit(page, item.remark, col.remarkX + 2, pos.y - 2.6, col.remarkW - 4, thaiFont, 5.2, black);
-        }
-
-        if (Number(item.OP) === 1) drawTick(page, col.opX, pos.y, black);
-        if (Number(item.MT) === 1) drawTick(page, col.mtX, pos.y, black);
-        if (Number(item.OT) === 1) drawTick(page, col.otX, pos.y, black);
-      });
-
-      if (payload.image && payload.image.dataUrl) {
-        await drawAttachedImage(pdfDoc, page, payload.image.dataUrl);
-      }
-
-      const pdfBytes = await pdfDoc.save();
-      return uint8ArrayToDataUrl(pdfBytes, "application/pdf");
+    if (item.remark && item.remark.trim() !== "") {
+      drawTextFit(
+        page,
+        item.remark,
+        col.remarkX + 2,
+        pos.y - 2.6,
+        col.remarkW - 4,
+        thaiFont,
+        5.2,
+        black
+      );
     }
+
+    if (Number(item.OP) === 1) drawTick(page, col.opX, pos.y, black);
+    if (Number(item.MT) === 1) drawTick(page, col.mtX, pos.y, black);
+    if (Number(item.OT) === 1) drawTick(page, col.otX, pos.y, black);
+  });
+
+  // ====== รูปภาพแนบ (คงเดิมทั้งหมด) ======
+  if (payload.image && payload.image.dataUrl) {
+    await drawAttachedImage(pdfDoc, page, payload.image.dataUrl);
+  }
+
+  const pdfBytes = await pdfDoc.save();
+  return uint8ArrayToDataUrl(pdfBytes, "application/pdf");
+}
+
+    function drawHeaderField(page, value, cfg, font, color) {
+  drawTextFit(
+    page,
+    value || "",
+    cfg.x,
+    cfg.y,
+    cfg.w,
+    font,
+    cfg.size || 6.2,
+    color
+  );
+}
 
     async function drawAttachedImage(pdfDoc, page, dataUrl) {
       const bytes = dataUrlToUint8Array(dataUrl);
