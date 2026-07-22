@@ -7,6 +7,7 @@
 
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <style>
     * { box-sizing: border-box; }
@@ -434,6 +435,12 @@
       display: flex;
     }
 
+    .popup-overlay.success-mode {
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 26px;
+    }
+
     .popup-card {
       width: 100%;
       max-width: 420px;
@@ -443,6 +450,22 @@
       text-align: center;
       box-shadow: 0 20px 60px rgba(0,0,0,0.22);
       animation: popupIn 0.22s ease-out;
+    }
+
+    .popup-card.success-card {
+      max-width: 900px;
+      padding: 16px;
+      border-radius: 30px;
+      text-align: left;
+      background: #fffdf8;
+    }
+
+    .popup-simple-content {
+      display: block;
+    }
+
+    .success-card-content {
+      display: none;
     }
 
     .popup-icon {
@@ -477,13 +500,151 @@
     }
 
     .popup-spinner {
-      width: 48px;
-      height: 48px;
-      border: 5px solid #e9ecef;
+      width: 54px;
+      height: 54px;
+      border: 6px solid #e9ecef;
       border-top-color: #1f6feb;
       border-radius: 50%;
       margin: 0 auto 16px;
       animation: spin 0.8s linear infinite;
+    }
+
+    .popup-x-icon {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: #e53935;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 46px;
+      font-weight: 900;
+      line-height: 1;
+      margin: 0 auto 14px;
+      box-shadow: 0 8px 24px rgba(229, 57, 53, 0.28);
+    }
+
+    .success-share-card {
+      background: linear-gradient(135deg, #fff8ee 0%, #ffffff 48%, #ecfff3 100%);
+      border: 1px solid #f1eadf;
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
+    }
+
+    .success-share-title {
+      text-align: center;
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 900;
+      color: #0b7a33;
+      margin-bottom: 18px;
+      letter-spacing: 0.2px;
+    }
+
+    .success-share-body {
+      display: grid;
+      grid-template-columns: minmax(190px, 0.9fr) minmax(260px, 1.25fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .success-image-box {
+      width: 100%;
+      min-height: 240px;
+      border-radius: 22px;
+      overflow: hidden;
+      background: #f4f6f8;
+      border: 1px solid #e6e6e6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .success-no-image {
+      color: #777;
+      font-size: 18px;
+      font-weight: 800;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .success-info-box {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid #e8e8e8;
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .success-info-heading {
+      font-size: 22px;
+      font-weight: 900;
+      color: #111;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .success-info-row {
+      display: grid;
+      grid-template-columns: 155px 1fr;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px dashed #e9e9e9;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .success-info-row:last-child {
+      border-bottom: none;
+    }
+
+    .success-info-label {
+      font-weight: 900;
+      color: #555;
+    }
+
+    .success-info-value {
+      font-weight: 800;
+      color: #111;
+      word-break: break-word;
+    }
+
+    .success-action-row {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .success-action-btn {
+      min-height: 50px;
+      min-width: 140px;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 22px;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .success-action-btn.close {
+      background: #f1f3f5;
+      color: #111;
+    }
+
+    .success-action-btn.line {
+      background: #06c755;
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(6, 199, 85, 0.25);
     }
 
     @keyframes popupIn {
@@ -494,6 +655,36 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+
+    @media (max-width: 720px) {
+      .popup-overlay.success-mode {
+        padding-top: 14px;
+        align-items: flex-start;
+      }
+
+      .popup-card.success-card {
+        max-width: 100%;
+        padding: 12px;
+      }
+
+      .success-share-card {
+        padding: 16px;
+      }
+
+      .success-share-body {
+        grid-template-columns: 1fr;
+      }
+
+      .success-image-box {
+        min-height: 190px;
+      }
+
+      .success-info-row {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+    }
+
 
     .main-btn:active,
     .nav-btn:active,
@@ -602,13 +793,37 @@
   </div>
 
   <div id="cutePopup" class="popup-overlay">
-    <div class="popup-card">
-      <div id="popupIcon" class="popup-icon">🌸</div>
-      <div id="popupTitle" class="popup-title">แจ้งเตือน</div>
-      <div id="popupMessage" class="popup-message"></div>
-      <button id="popupCloseBtn" class="popup-close-btn" type="button" onclick="hideCutePopup()">
-        ตกลง
-      </button>
+    <div id="popupCard" class="popup-card">
+      <div id="popupSimpleContent" class="popup-simple-content">
+        <div id="popupIcon" class="popup-icon">🌸</div>
+        <div id="popupTitle" class="popup-title">แจ้งเตือน</div>
+        <div id="popupMessage" class="popup-message"></div>
+        <button id="popupCloseBtn" class="popup-close-btn" type="button" onclick="hideCutePopup()">
+          ตกลง
+        </button>
+      </div>
+
+      <div id="popupSuccessContent" class="success-card-content">
+        <div id="successShareCard" class="success-share-card">
+          <div class="success-share-title">บันทึกสำเร็จ</div>
+          <div class="success-share-body">
+            <div id="successImageBox" class="success-image-box"></div>
+            <div class="success-info-box">
+              <div class="success-info-heading">ข้อมูลหัวกระดาษ</div>
+              <div id="successInfoRows"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="success-action-row">
+          <button class="success-action-btn close" type="button" onclick="closeSuccessPopup()">
+            ปิด
+          </button>
+          <button id="lineShareBtn" class="success-action-btn line" type="button" onclick="shareSuccessCardToLine()">
+            แชร์ไปที่ LINE
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1278,11 +1493,8 @@ const PDF_HEADER_FIELDS = {
       if (isSubmitting) return;
 
       if (!WEB_APP_URL || WEB_APP_URL.includes("ใส่_WEB_APP_URL")) {
-        showCutePopup(
-          "error",
-          "ยังไม่ได้ตั้งค่า Web App URL",
-          "กรุณาใส่ URL จาก Google Apps Script ก่อนใช้งานจริงค่ะ"
-        );
+        console.error("ยังไม่ได้ตั้งค่า Web App URL");
+        showCutePopup("error");
         return;
       }
 
@@ -1295,9 +1507,7 @@ const PDF_HEADER_FIELDS = {
         isSubmitting = true;
         setSubmitLoading(true);
 
-        showCutePopup(
-          "ระบบกำลังบันทึกข้อมูล"
-        );
+        showCutePopup("loading");
 
         const pdfDataUrl = await generateFilledPdfDataUrl(payload);
         const pdfName = buildPdfFileName(payload.basicInfo.machineArea, saveDate);
@@ -1306,10 +1516,6 @@ const PDF_HEADER_FIELDS = {
           name: pdfName,
           dataUrl: pdfDataUrl
         };
-
-        showCutePopup(
-          "กรุณารอสักครู่ค่ะ"
-        );
 
         await fetch(WEB_APP_URL, {
           method: "POST",
@@ -1320,22 +1526,11 @@ const PDF_HEADER_FIELDS = {
           body: JSON.stringify(payload)
         });
 
-        showCutePopup(
-          "บันทึกสำเร็จ"
-        );
-
-        setTimeout(() => {
-          goHomeAndClear();
-        }, 1800);
+        showCutePopup("success", payload);
 
       } catch (error) {
         console.error(error);
-
-        showCutePopup(
-          "error",
-          "ส่งข้อมูลไม่สำเร็จ",
-          "รายละเอียด: " + error.message
-        );
+        showCutePopup("error");
 
       } finally {
         isSubmitting = false;
@@ -1577,43 +1772,165 @@ const PDF_HEADER_FIELDS = {
       }
     }
 
-    function showCutePopup(type, title, message) {
+    function showCutePopup(type, titleOrPayload, message) {
       const popup = document.getElementById("cutePopup");
+      const card = document.getElementById("popupCard");
+      const simpleContent = document.getElementById("popupSimpleContent");
+      const successContent = document.getElementById("popupSuccessContent");
       const icon = document.getElementById("popupIcon");
       const titleEl = document.getElementById("popupTitle");
       const messageEl = document.getElementById("popupMessage");
       const closeBtn = document.getElementById("popupCloseBtn");
+      const payload = typeof titleOrPayload === "object" && titleOrPayload !== null ? titleOrPayload : null;
+      const customTitle = typeof titleOrPayload === "string" ? titleOrPayload : "";
+      const customMessage = typeof message === "string" ? message : "";
 
-      if (!popup || !icon || !titleEl || !messageEl || !closeBtn) {
-        alert(title + "\n" + message);
+      if (!popup || !card || !simpleContent || !successContent || !icon || !titleEl || !messageEl || !closeBtn) {
+        if (type === "success") alert("บันทึกสำเร็จ");
+        else if (type === "loading") alert("กรุณารอสักครู่ กำลังบันทึกข้อมูล");
+        else alert(customTitle || "บันทึกข้อมูลไม่สำเร็จ");
         return;
       }
 
+      popup.classList.remove("success-mode");
+      card.classList.remove("success-card");
+      simpleContent.style.display = "block";
+      successContent.style.display = "none";
+      closeBtn.style.display = "inline-block";
+
       if (type === "loading") {
         icon.innerHTML = `<div class="popup-spinner"></div>`;
+        titleEl.textContent = "กรุณารอสักครู่ กำลังบันทึกข้อมูล";
+        messageEl.textContent = "";
         closeBtn.style.display = "none";
       } else if (type === "success") {
-        icon.textContent = "✅";
-        closeBtn.style.display = "inline-block";
-      } else if (type === "error") {
-        icon.textContent = "🌧️";
+        popup.classList.add("success-mode");
+        card.classList.add("success-card");
+        simpleContent.style.display = "none";
+        successContent.style.display = "block";
+        renderSuccessCard(payload || buildPayload());
+      } else if (type === "info") {
+        icon.textContent = "🌸";
+        titleEl.textContent = customTitle || "แจ้งเตือน";
+        messageEl.textContent = customMessage || "";
         closeBtn.style.display = "inline-block";
       } else {
-        icon.textContent = "🌸";
+        icon.innerHTML = `<div class="popup-x-icon">×</div>`;
+        titleEl.textContent = customTitle || "บันทึกข้อมูลไม่สำเร็จ";
+        messageEl.textContent = customMessage || "";
         closeBtn.style.display = "inline-block";
       }
-
-      titleEl.textContent = title;
-      messageEl.textContent = message;
 
       popup.classList.add("show");
     }
 
+    function renderSuccessCard(payload) {
+      const imageBox = document.getElementById("successImageBox");
+      const infoRows = document.getElementById("successInfoRows");
+      const basic = payload.basicInfo || {};
+      const saveDate = payload.saveDate || getTodayThaiDateText();
+
+      if (imageBox) {
+        if (payload.image && payload.image.dataUrl) {
+          imageBox.innerHTML = `<img src="${payload.image.dataUrl}" alt="รูปภาพที่แนบ" />`;
+        } else {
+          imageBox.innerHTML = `<div class="success-no-image">ไม่มีรูปภาพแนบ</div>`;
+        }
+      }
+
+      if (infoRows) {
+        const rows = [
+          ["วันที่บันทึก", saveDate],
+          ["MACHINE / พื้นที่", basic.machineArea || "-"],
+          ["MODEL", basic.model || "-"],
+          ["PLANT", basic.plant || "-"],
+          ["SERIAL NO.", basic.serialNo || "-"],
+          ["INTEND FUCTION", basic.intendFunction || "-"],
+          ["ชื่อผู้รายงาน", basic.reporterName || "-"]
+        ];
+
+        infoRows.innerHTML = rows.map(row => `
+          <div class="success-info-row">
+            <div class="success-info-label">${escapeHtml(row[0])}</div>
+            <div class="success-info-value">${escapeHtml(row[1])}</div>
+          </div>
+        `).join("");
+      }
+
+      const lineBtn = document.getElementById("lineShareBtn");
+      if (lineBtn) lineBtn.textContent = "แชร์ไปที่ LINE";
+    }
+
+    async function shareSuccessCardToLine() {
+      const card = document.getElementById("successShareCard");
+      const lineBtn = document.getElementById("lineShareBtn");
+      if (!card || !lineBtn) return;
+
+      const originalText = lineBtn.textContent;
+
+      try {
+        lineBtn.disabled = true;
+        lineBtn.textContent = "กำลังเตรียมภาพ...";
+
+        if (!window.html2canvas) {
+          throw new Error("ไม่พบ html2canvas");
+        }
+
+        const canvas = await html2canvas(card, {
+          scale: 2,
+          backgroundColor: "#ffffff",
+          useCORS: true
+        });
+
+        const blob = await new Promise(resolve => {
+          canvas.toBlob(resolve, "image/png", 0.95);
+        });
+
+        if (!blob) {
+          throw new Error("ไม่สามารถสร้างภาพ PNG ได้");
+        }
+
+        const fileName = "HIRA_บันทึกสำเร็จ_" + getTodayThaiDateText() + ".png";
+        const file = new File([blob], fileName, { type: "image/png" });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+          await navigator.share({
+            files: [file],
+            title: "บันทึกสำเร็จ",
+            text: "บันทึกสำเร็จ"
+          });
+          lineBtn.textContent = originalText;
+        } else {
+          lineBtn.textContent = "อุปกรณ์นี้ไม่รองรับแชร์ภาพ";
+          setTimeout(() => {
+            lineBtn.textContent = originalText;
+          }, 2200);
+        }
+      } catch (error) {
+        console.error(error);
+        lineBtn.textContent = "แชร์ภาพไม่สำเร็จ";
+        setTimeout(() => {
+          lineBtn.textContent = originalText;
+        }, 2200);
+      } finally {
+        lineBtn.disabled = false;
+      }
+    }
+
     function hideCutePopup() {
       const popup = document.getElementById("cutePopup");
+      const card = document.getElementById("popupCard");
       if (popup) {
-        popup.classList.remove("show");
+        popup.classList.remove("show", "success-mode");
       }
+      if (card) {
+        card.classList.remove("success-card");
+      }
+    }
+
+    function closeSuccessPopup() {
+      hideCutePopup();
+      goHomeAndClear();
     }
 
     function goHomeAndClear() {
